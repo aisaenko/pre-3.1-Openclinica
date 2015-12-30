@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+<role role="testUser" version="0" id="-1"/>
+<permission id="1"  access_url="pages/login/login"/>
+<role_permission id="-1" permission_id="1" role_id="-1"/>
+ 
+</dataset>

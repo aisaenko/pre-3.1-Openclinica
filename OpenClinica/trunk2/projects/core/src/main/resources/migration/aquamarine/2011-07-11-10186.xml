@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    
+    
+   <changeSet author="jnyayapathi" id="2011-07-11-10186-1">
+        <comment>Create a table named USER_ROLE_ACCESS</comment>
+        <createTable tableName="user_role_access">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role_id" type="int"/>
+            <column name="user_id" type="int"/>
+            <column name="group_id" type="int"/>
+            <column name="status_id" type="int"/>
+            <column name="owner_id" type="int"/>
+            <column name="date_created" type="DATE"/>
+            <column name="date_updated" type="DATE"/>
+            <column name="update_id" type="int"/>
+            <column name="version" type="int" defaultValue="0"/>
+        </createTable>
+    </changeSet>    
+
+<!-- 	<changeSet author="jnyayapathi" id="2011-07-11-10186-2" dbms="oracle">
+		<preConditions onFail="MARK_RAN">
+            <dbms type="oracle"/>
+        </preConditions>
+		<comment>Create a squence/trigger to imitate autoIncrement functionality for oracle</comment>
+		
+	</changeSet> -->
+	   <changeSet author="jnyayapathi" id="2011-07-11-10186-3">
+        <comment>Create a table named ROLE</comment>
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role_name" type="VARCHAR(255)"/>
+             <column name="parent_id" type="int"/>
+              <column name="version" type="int" defaultValue="0"/>
+        </createTable>
+    </changeSet>  
+    
+    <!-- TODO ADD ORACLE SEQUENCES -->
+    
+    
+    
+		<changeSet author="jnyayapathi" id="2011-07-11-10186-5">
+		<comment>Add foreign key for role.parent_id </comment>
+    	<addForeignKeyConstraint constraintName="parent_id_fk_role_id"
+    	                         baseColumnNames="parent_id" 
+    	                         baseTableName="role" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="role"/>
+    </changeSet>
+	
+	<changeSet author="jnyayapathi" id="2011-07-11-10186-6">
+		<comment>Add foreign key for user_role_access.role_id</comment>
+    	<addForeignKeyConstraint constraintName="usr_role_access_fk_role_id"
+    	                         baseColumnNames="role_id" 
+    	                         baseTableName="user_role_access" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="role"/>
+    </changeSet>
+
+	<changeSet author="jnyayapathi" id="2011-07-11-10186-7">
+		<comment>Add foreign key for user_role_access.user_id</comment>
+    	<addForeignKeyConstraint constraintName="usr_role_access_fk_user_id"
+    	                         baseColumnNames="user_id" 
+    	                         baseTableName="user_role_access" 
+    	                         onDelete="CASCADE" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="user_id" 
+    	                         referencedTableName="user_account"/>
+    </changeSet>
+
+
+	   <changeSet author="jnyayapathi" id="2011-07-11-10186-8">
+        <comment>Create a table named ROLE_PERMISSION MAPPING TABLE</comment>
+        <createTable tableName="role_permission">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="role_id" type="int"/>
+             <column name="permission_id" type="int"/>
+             <column name="version" type="int" defaultValue="0"/>
+        </createTable>
+    </changeSet>  
+
+<!-- TODO: add oracle seq2011-07-11-10186-9 -->
+	   <changeSet author="jnyayapathi" id="2011-07-11-10186-10">
+        <comment>Create a table named PERMISSION  table</comment>
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="access_url" type="varchar(1000)"/>
+           <column name="version" type="int" defaultValue="0"/>
+        </createTable>
+    </changeSet>  
+    <!-- TODO: add oracle seq2011-07-11-10186-11 -->
+	<changeSet author="jnyayapathi" id="2011-07-11-10186-12">
+		<comment>Add foreign key for role_permission.role_id</comment>
+    	<addForeignKeyConstraint constraintName="role_permission_fk_role_id"
+    	                         baseColumnNames="role_id" 
+    	                         baseTableName="role_permission" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="role"/>
+    </changeSet>
+
+	<changeSet author="jnyayapathi" id="2011-07-11-10186-13">
+		<comment>Add foreign key for role_permission.permission_id</comment>
+    	<addForeignKeyConstraint constraintName="role_permission_fk_permission_id"
+    	                         baseColumnNames="permission_id" 
+    	                         baseTableName="role_permission" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="permission"/>
+    </changeSet>
+
+<changeSet author="jnyayapathi" id="2011-07-11-10186-14">
+        <comment>Create a table named group_auth_definition  table</comment>
+        <createTable tableName="group_auth_definition">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="oc_oid_reference_list" type="varchar(1000)"/>
+           <column name="version" type="int" defaultValue="0"/>
+           <column name="group_name" type="varchar(1000)"/>
+           <column name="grp_parent_id" type="int"/>
+        </createTable>
+    </changeSet>  
+
+
+
+<!-- 2011-07-11-10186-15 reserved for oracle -->
+
+
+<changeSet author="jnyayapathi" id="2011-07-11-10186-16">
+		<comment>Add foreign key for user_role_access.group_id</comment>
+    	<addForeignKeyConstraint constraintName="usr_role_access_fk_group_id"
+    	                         baseColumnNames="group_id" 
+    	                         baseTableName="user_role_access" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="group_auth_definition"/>
+    </changeSet>
+    
+    <changeSet author="jnyayapathi" id="2011-07-11-10186-17">
+		<comment>Add foreign key for group_auth_def.group_id</comment>
+    	<addForeignKeyConstraint constraintName="grp_parent_id_fk_id"
+    	                         baseColumnNames="grp_parent_id" 
+    	                         baseTableName="group_auth_definition" 
+    	                         onDelete="RESTRICT" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="id" 
+    	                         referencedTableName="group_auth_definition"/>
+    </changeSet>
+    <changeSet author="jnyayapathi" id="2011-07-11-10186-18">
+		<comment>Add foreign key for user_role_access.user_id</comment>
+    	<addForeignKeyConstraint constraintName="usr_role_access_fk_status_id"
+    	                         baseColumnNames="status_id" 
+    	                         baseTableName="user_role_access" 
+    	                         onDelete="CASCADE" onUpdate="RESTRICT" 
+    	                         referencedColumnNames="status_id" 
+    	                         referencedTableName="status"/>
+    </changeSet>
+    
+    
+    	<changeSet author="jnyayapathi" id="2010-10-28-10186" dbms="postgresql">
+		<comment>ALTER TABLE permission add column access_parameters varchar2(1000)</comment>
+    	<sql splitStatements="false">
+			alter table permission add column access_parameters character varying(1000)
+    	</sql>
+		<rollback/>
+	</changeSet>
+		<changeSet author="jnyayapathi" id="2010-12-20-10186-1" dbms="postgresql">
+		<comment>alter table permission add column is_admin boolean default false</comment>
+    	<sql splitStatements="false">
+			alter table permission add column is_admin boolean default false
+    	</sql>
+		<rollback/>
+	</changeSet>
+			<changeSet author="jnyayapathi" id="2010-12-20-10186-2" dbms="postgresql">
+		<comment>update permission set is_admin = true where access_url in ('/ListStudy','/ListUserAccounts','/ListCRF','/ViewAllJobs','/ListSubject','/CreateStudy','/CreateUserAccount','/AuditUserActivity','/Configure','/pages/admin/viewRolePermissions') </comment>
+    	<sql splitStatements="false">
+		update permission set is_admin = true where access_url in ('/ListStudy','/ListUserAccounts','/ListCRF','/ViewAllJobs','/ListSubject','/CreateStudy','/CreateUserAccount','/AuditUserActivity','/Configure','/pages/admin/viewRolePermissions') 
+    	</sql>
+		<rollback/>
+	</changeSet>
+			<changeSet author="jnyayapathi" id="2010-12-20-10186-3" dbms="postgresql">
+		<comment>update permission set is_admin = true where access_url in ('/ViewUserAccount','/EditUserAccount','/EditStudyUserRole','/DeleteStudyUserRole','/SetUserRole','/DeleteUser')</comment>
+    	<sql splitStatements="false">
+		update permission set is_admin = true where access_url in ('/ViewUserAccount','/EditUserAccount','/EditStudyUserRole','/DeleteStudyUserRole','/SetUserRole','/DeleteUser') 
+    	</sql>
+		<rollback/>
+	</changeSet>
+</databaseChangeLog>

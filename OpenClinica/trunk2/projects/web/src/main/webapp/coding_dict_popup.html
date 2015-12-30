@@ -1,0 +1,66 @@
+<HTML>
+	<HEAD>
+		<TITLE>New - Browse dictionary</TITLE>
+	</HEAD>
+	<script type="text/javascript">
+    /** Gets the id of the currently selected concept, will be null if nothing is selected. */
+	/*function getSelectedConceptID() {
+	var conceptID = null;
+	var app = getApp();
+	if (app && app.getSelectedConceptID) {
+		conceptID = app.getSelectedConceptID();
+	}
+	return conceptID;
+	}*/
+	
+	/** Implement this function to listen for tree selection changes */
+	/*function treeSelectionChanged(nodeID, nodeName, swfID) {
+		alert("tree selection: " + nodeID + " - " + nodeName + " - " + swfID);
+		
+		if (opener && !opener.closed){
+		opener.document.theForm.theField.value = nodeID;
+		opener.focus();
+		}
+		window.close();
+	}*/
+	
+	/** Implement this function to listen for tree double click events */
+	function treeNodeDoubleClicked(nodeID, nodeName, swfID) {
+		//alert("tree node double clicked: " + nodeID + " - " + nodeName + " - " + swfID);
+		setCode(nodeID);
+	}
+
+
+	function setCode(code)
+	{
+		if (opener && !opener.closed && opener.setTargetField){
+		opener.setTargetField(targetField, code);
+		}
+		window.close();
+	}
+	
+	
+	</script>
+	
+	<BODY>
+	
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+            id="OntologyTree" width="300" height="100%"
+            codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
+            <param name="movie" value="http://bioportal.bioontology.org/flex/OntologyTree.swf" />
+            <param name="quality" value="high" />
+            <param name="bgcolor" value="#ffffff" />
+            <param name="allowScriptAccess" value="always" />     
+            <param name="flashVars" value="ontology=1006&alerterrors=false&canchangeontology=false&virtual=true&server=http://192.168.15.174:8080" />
+            <embed src="http://bioportal.bioontology.org/flex/OntologyTree.swf" quality="high" bgcolor="#ffffff"
+                        width="300" height="100%" name="OntologyTree" align="middle"
+                        play="true"
+                        loop="false"
+                        allowScriptAccess="always"
+                        type="application/x-shockwave-flash"
+                        flashVars="ontology=1006&alerterrors=false&canchangeontology=true&virtual=true&server=http://192.168.15.174:8080"
+                        pluginspage="http://www.adobe.com/go/getflashplayer">
+            </embed>
+</object>
+</BODY>
+</HTML>

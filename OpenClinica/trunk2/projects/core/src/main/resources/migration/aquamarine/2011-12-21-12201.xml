@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<!--  Add roles Medical Coder and Medical Code Reviewer -->
+	 <changeSet author="pgawade" id="2011-08-03-12201-1" runOnChange="true">
+		<insert tableName="role">
+		    <column name="id" valueNumeric="10"/>
+		    <column name="role_name" value="Medical Coder"/>		    
+		</insert>
+	</changeSet> 
+	
+	<changeSet author="pgawade" id="2011-08-03-12201-2" runOnChange="true">	
+		<insert tableName="role">
+		    <column name="id" valueNumeric="11"/>
+		    <column name="role_name" value="Medical Codes Reviewer"/>
+		    </insert>
+	</changeSet>  
+	
+	<!--  Add permission to access browse dictionary pop-up page -->	
+	 <changeSet author="pgawade" id="2011-08-03-12201-3" runOnChange="true">
+		<insert tableName="permission">
+		    <column name="id" valueNumeric="234"/>
+		    <column name="access_url" value="/coding_dict_popup.html"/>		    
+		</insert> 
+	</changeSet>
+	
+	<changeSet author="pgawade" id="2011-08-03-12201-4" runOnChange="true">	
+	<!--  Add permission to access coding center page -->		 		
+		<insert tableName="permission">
+		    <column name="id" valueNumeric="225"/>
+		    <column name="access_url" value="/pages/reviewCodes"/>		    
+		</insert>		
+    </changeSet> 
+     
+    <!--  Grant permissions to access coding center, browse dictionary pop-up by roles Medical Coder and Medical Code Reviewer -->   	
+    <changeSet author="pgawade" id="2011-08-03-12201-5" runOnChange="true">
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1781"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="234"/>
+		</insert>		
+	</changeSet>
+	<changeSet author="pgawade" id="2011-08-03-12201-6" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1782"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="234"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-08-03-12201-7" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1783"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="225"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-08-03-12201-8" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1784"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="225"/>
+		</insert>
+    </changeSet>    
+    <!--  Grant permissions to access create, view discrepancy notes page by roles Medical Coder and Medical Code Reviewer -->
+    <changeSet author="pgawade" id="2011-12-21-12201-9" runOnChange="true">
+		<!--  /CreateDiscrepancyNote -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1785"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="22"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-10" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1786"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="22"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-11" runOnChange="true">	
+		<!--  /ViewNotes -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1787"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="177"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-12" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1788"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="177"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-13" runOnChange="true">	
+		<!--  /ViewDiscrepancyNote -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1789"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="166"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-14" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1790"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="166"/>
+		</insert>
+    </changeSet>	
+    <!--  Grant permissions to View study subject by roles Medical Coder and Medical Code Reviewer -->
+    <changeSet author="pgawade" id="2011-12-21-12201-15" runOnChange="true">
+		<!--  /ViewStudySubject -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1791"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="190"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-16" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1792"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="190"/>
+		</insert>		
+    </changeSet>
+    <!--  Grant permissions to View event by roles Medical Coder and Medical Code Reviewer -->
+    <changeSet author="pgawade" id="2011-12-21-12201-17" runOnChange="true">
+		<!--  /EnterDataForStudyEvent -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1793"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="51"/>
+		</insert>
+	</changeSet>	
+	<changeSet author="pgawade" id="2011-12-21-12201-18" runOnChange="true">
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1794"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="51"/>
+		</insert>		
+    </changeSet>
+    <!--  Grant permissions to View study subject audit log by roles Medical Coder and Medical Code Reviewer -->
+    <changeSet author="pgawade" id="2011-12-21-12201-19" runOnChange="true">
+		<!--  /EnterDataForStudyEvent -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1795"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="192"/>
+		</insert>
+	</changeSet>
+	<changeSet author="pgawade" id="2011-12-21-12201-20" runOnChange="true">	
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1796"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="192"/>
+		</insert>		
+    </changeSet>
+    <!--  Grant permissions to View event CRF by roles Medical Coder and Medical Code Reviewer -->
+     <changeSet author="pgawade" id="2011-12-21-12201-21" runOnChange="true">
+		<!--  /ViewSectionDataEntry -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1797"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="183"/>
+		</insert>
+	</changeSet>	
+	<changeSet author="pgawade" id="2011-12-21-12201-22" runOnChange="true">
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1798"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="183"/>
+		</insert>		
+    </changeSet>
+    <!--  Grant permissions to Print event CRF by roles Medical Coder and Medical Code Reviewer -->
+     <changeSet author="pgawade" id="2011-12-21-12201-23" runOnChange="true">
+		<!--  /PrintCRF -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1799"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="89"/>
+		</insert>
+	</changeSet>	
+	<changeSet author="pgawade" id="2011-12-21-12201-24" runOnChange="true">
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1800"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="89"/>
+		</insert>		
+    </changeSet>
+    <!--  Grant permissions to View study by roles Medical Coder and Medical Code Reviewer -->
+     <changeSet author="pgawade" id="2011-12-21-12201-25" runOnChange="true">
+		<!--  /ViewStudy -->
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1801"/>
+		    <column name="role_id" value="10"/>		    
+		    <column name="permission_id" value="188"/>
+		</insert>
+	 </changeSet>	
+	 <changeSet author="pgawade" id="2011-12-21-12201-26" runOnChange="true">
+		<insert tableName="role_permission">
+		    <column name="id" valueNumeric="1802"/>
+		    <column name="role_id" value="11"/>		    
+		    <column name="permission_id" value="188"/>
+		</insert>		
+    </changeSet>
+</databaseChangeLog> 

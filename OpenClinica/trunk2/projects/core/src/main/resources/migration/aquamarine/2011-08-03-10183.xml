@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<changeSet author="pgawade" id="2011-08-03-10183-1">
+		<insert tableName="response_type">
+		    <column name="response_type_id" valueNumeric="11"/>
+		    <column name="name" value="hidden-code"/>
+		    <column name="description" value="medical codes"/>
+		</insert>
+    </changeSet>
+    <changeSet author="pgawade" id="2011-08-23-10183-2">
+        <createTable tableName="coding_dictionary">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="oc_oid" type="VARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(500)"/>
+            <column name="dictionary_version" type="VARCHAR(300)"/><!--ToDo: unique constraint on name, dictionary_version column -->
+            <column name="description" type="VARCHAR(500)"/>
+            <!-- <column name="ontology_id" type="VARCHAR(300)"/> 
+            <column name="ontology_version_id" type="VARCHAR(300)"/> -->
+            <column name="data_type_id" type="INT"/>
+            <column name="status_id" type="INT"/>
+            <column name="url" type="VARCHAR(500)"/>
+            <column name="version" type="INT"/> <!--  this is column for managing DB transactions and not the dictionary version -->           
+        </createTable>
+    </changeSet>
+   
+	 
+	<changeSet author="pgawade (generated)" id="2011-08-23-10183-3">
+		<preConditions onFail="MARK_RAN">
+			<dbms type="oracle" />			
+	 	</preConditions>            
+        <createSequence sequenceName="coding_dictionary_id_seq"/>
+    </changeSet>
+    
+	<changeSet author="pgawade (generated)" id="2011-08-23-10183-4">
+		<preConditions onFail="MARK_RAN">
+			<dbms type="oracle" />			
+	 	</preConditions>	
+		<sql splitStatements="false">
+			/*  -- 
+		prompt Create trigger CODING_DICTIONARY_BEF_TRG on table coding_dictionary
+		  -- */
+
+		create or replace trigger coding_dictionary_bef_trg
+		  before insert on coding_dictionary
+		  for each row
+		begin
+		  if :new.id is null then
+		    select coding_dictionary_id_seq.nextval
+		      into :new.id
+		      from dual;
+		  end if;
+		end;
+	     /* / */
+		</sql>
+	</changeSet>
+	
+	<!--  <changeSet author="pgawade" id="2011-08-23-10183-5">
+	    <insert tableName="coding_dictionary">
+		<column name="dictionary_name" value="MEDRA"/>
+		<column name="description" value="MEDRA coding dictionary"/>
+		<column name="ontology_id" value="1422"/>--><!--  this value is temporary to match with data value in NCBO centrally hosted BioPortal instance. Change it later according to data on BioPortal in Akaza coding application instance --> 
+		<!-- <column name="dictionary_version" value="1.3"/>
+	    </insert>
+	</changeSet> -->
+	
+	 <changeSet author="pgawade" id="2011-08-23-10183-6">
+        <createTable tableName="thesaurus">
+            <column autoIncrement="true" name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="dictionary_id" type="int"/>            
+            <column name="study_id" type="int"/>
+            <column name="verbatim_term" type="VARCHAR(4000)"/>
+            <column name="code" type="VARCHAR(500)"/> 
+            <column name="code_details" type="VARCHAR(2000)"/> 
+            <column name="date_updated" type="timestamp"/>
+            <column name="version" type="INT"/><!--  this is column for managing DB transactions and not the dictionary version -->           
+        </createTable>
+    </changeSet>
+    	    	
+     <changeSet author="pgawade" id="2011-08-23-10183-7">
+     	<addColumn tableName="rule_action_property">
+    		<!-- <column name="coding_dictionary_id" type="VARCHAR(500)"/> -->
+    		<column name="codelist_oid" type="VARCHAR(500)"/>
+		</addColumn>
+     </changeSet>
+     
+     <changeSet author="pgawade" id="2011-10-20-11488-1">
+        <createTable tableName="entity_type">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            
+            <column name="type_name" type="VARCHAR(300)"/>
+            <column name="sub_type_name" type="VARCHAR(300)"/>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="version" type="INT"/> <!--  this is column for managing DB transactions and not the dictionary version -->           
+        </createTable>
+    </changeSet> 
+    <changeSet author="pgawade" id="2011-10-20-11488-2">
+		<insert tableName="entity_type">
+			<column name="id" valueNumeric="1"/>
+		    <column name="type_name" value="User-created"/>
+		    <column name="sub_type_name" value=""/>
+		    <column name="description" value="user created entity"/>
+		</insert>
+		
+		<insert tableName="entity_type">
+			<column name="id" valueNumeric="2"/>
+		    <column name="type_name" value="System-generated"/>
+		    <column name="sub_type_name" value="MEDICAL_CODING"/>
+		    <column name="description" value="system generated entity for medical coding"/>
+		</insert>
+    </changeSet> 
+    <changeSet author="pgawade" id="2011-08-23-11488-3">
+     	<addColumn tableName="rule">    		
+    		<column name="rule_type_id" type="int" defaultValue="1"/>
+		</addColumn>    
+    </changeSet>
+    
+     <changeSet author="pgawade" id="2011-10-20-11379-1">
+		<insert tableName="status">
+			<column name="status_id" valueNumeric="11"/>
+		    <column name="name" value="not-coded"/>		    
+		    <column name="description" value="not passed through the auto coding process yet; default initial value for all code data items"/>
+		</insert>
+		
+		<insert tableName="status">
+			<column name="status_id" valueNumeric="12"/>
+		    <column name="name" value="coded"/>		    
+		    <column name="description" value="passed through the auto coding process and found the exact match"/>
+		</insert>
+		
+		<insert tableName="status">
+			<column name="status_id" valueNumeric="13"/>
+		    <column name="name" value="match-not-found"/>		    
+		    <column name="description" value="passed through the auto coding process but did not find the exact match"/>
+		</insert>
+		
+		<insert tableName="status">
+			<column name="status_id" valueNumeric="14"/>
+		    <column name="name" value="code-approved"/>		    
+		    <column name="description" value="Approved by code reviewer"/>
+		</insert>
+	</changeSet>
+	
+	<changeSet author="pgawade" id="2011-08-23-11379-2">
+     	<addColumn tableName="item_data">    		
+    		<column name="coding_status_id" type="integer" defaultValue="11"/>
+		</addColumn>
+    </changeSet>	
+    <!-- 
+    <changeSet author="pgawade" id="2011-08-23-11379-3">
+    	<insert tableName="status">
+			<column name="status_id" valueNumeric="15"/>
+		    <column name="name" value="no-matches"/>		    
+		    <column name="description" value="multiple matches found during auto coding process"/>
+		</insert>
+    </changeSet>
+     -->
+     <changeSet author="pgawade" id="2011-08-23-11379-3">
+    	<insert tableName="status">
+			<column name="status_id" valueNumeric="15"/>
+		    <column name="name" value="no-exact-match"/>		    
+		    <column name="description" value="either multiple matches found or partial match found"/>
+		</insert>
+    </changeSet>
+</databaseChangeLog> 

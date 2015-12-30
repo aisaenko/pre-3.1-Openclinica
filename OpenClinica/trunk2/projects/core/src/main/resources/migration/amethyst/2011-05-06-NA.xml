@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<changeSet author="ahamid" id="2011-05-06-NA-1">
+        <comment>Create View for discrepancy notes extra data</comment>
+        <sql splitStatements="false">
+            CREATE OR REPLACE VIEW vw_dn_extra_data AS
+            select dn.discrepancy_note_id ,dn.entity_type, st.unique_identifier as site_id,
+            (select user_account.user_name from user_account where dn.owner_id = user_account.user_id) as owner_name,
+            (select (user_account.first_name || ' ' || user_account.last_name || ' (' || user_account.user_name || ')') from user_account where dn.assigned_user_id = user_account.user_id) as assigned_user,
+            (select new_dn.date_created from discrepancy_note new_dn where new_dn.parent_dn_id=dn.discrepancy_note_id and new_dn.discrepancy_note_id =
+                (select max(discrepancy_note_id) from discrepancy_note where parent_dn_id=dn.discrepancy_note_id)) as date_updated,
+            (SELECT count(*) FROM discrepancy_note WHERE parent_dn_id = dn.discrepancy_note_id
+                AND (study_id = dn.study_id
+                    OR study_id in
+                    (SELECT study_id FROM study WHERE parent_study_id=dn.study_id) OR study_id in (SELECT parent_study_id FROM study WHERE study_id=dn.study_id))) as no_of_notes,
+            CASE when dn.entity_type='itemData' then
+                (select sed.name from study_event_definition sed, event_crf ec, study_event se, item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and idata.item_data_id=didm.item_data_id
+                and idata.event_crf_id=ec.event_crf_id
+                and ec.study_event_id=se.study_event_id
+                and se.study_event_definition_id=sed.study_event_definition_id)
+                when dn.entity_type='eventCrf' then
+                (select sed.name from study_event_definition sed, event_crf ec, study_event se, dn_event_crf_map decm
+                where dn.discrepancy_note_id= decm.discrepancy_note_id
+                and decm.event_crf_id=ec.event_crf_id
+                and ec.study_event_id=se.study_event_id
+                and se.study_event_definition_id=sed.study_event_definition_id)
+                when dn.entity_type='studyEvent' then
+                (select sed.name from study_event_definition sed, study_event se, dn_study_event_map dse
+                where dn.discrepancy_note_id= dse.discrepancy_note_id
+                and dse.study_event_id=se.study_event_id
+                and se.study_event_definition_id=sed.study_event_definition_id)
+            END as event_name,
+            CASE when dn.entity_type='itemData' then
+                (select se.date_start from event_crf ec, study_event se, item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and idata.item_data_id=didm.item_data_id
+                and idata.event_crf_id=ec.event_crf_id
+                and ec.study_event_id=se.study_event_id)
+                when dn.entity_type='eventCrf' then
+                (select se.date_start from event_crf ec, study_event se, dn_event_crf_map decm
+                where dn.discrepancy_note_id= decm.discrepancy_note_id
+                and decm.event_crf_id=ec.event_crf_id
+                and ec.study_event_id=se.study_event_id)
+                when dn.entity_type='studyEvent' then
+                (select se.date_start from study_event se, dn_study_event_map dse
+                where dn.discrepancy_note_id= dse.discrepancy_note_id
+                and dse.study_event_id=se.study_event_id)
+            END as event_date,
+            CASE when dn.entity_type='itemData' then
+                (select crf.name from crf,crf_version cv, event_crf ec, item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and idata.item_data_id=didm.item_data_id
+                and idata.event_crf_id=ec.event_crf_id
+                and ec.crf_version_id=cv.crf_version_id
+                and cv.crf_id=crf.crf_id)
+                when dn.entity_type='eventCrf' then
+                (select crf.name from crf,crf_version cv, event_crf ec,  dn_event_crf_map decm
+                where dn.discrepancy_note_id= decm.discrepancy_note_id
+                and decm.event_crf_id=ec.event_crf_id
+                and ec.crf_version_id=cv.crf_version_id
+                and cv.crf_id=crf.crf_id)
+            END as crf_name,
+            CASE when dn.entity_type='itemData' then
+                (select CASE
+                      when ec.status_id=1 then 'Initial Data Entry'
+                      when (ec.status_id=4 and ec.validator_id!=0) then 'Double Data Entry'
+                      when (ec.status_id=4 and ec.validator_id=0) then 'Completed'
+                      when ec.status_id=2 then 'Completed'
+                      when ec.status_id=6 then 'Locked'
+                    END
+                 from event_crf ec, item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and idata.item_data_id=didm.item_data_id
+                and idata.event_crf_id=ec.event_crf_id)
+                when dn.entity_type='eventCrf' then
+                (select CASE
+                      when ec.status_id=1 then 'Initial Data Entry'
+                      when (ec.status_id=4 and ec.validator_id!=0) then 'Double Data Entry'
+                      when (ec.status_id=4 and ec.validator_id=0) then 'Completed'
+                      when ec.status_id=2 then 'Completed'
+                      when ec.status_id=6 then 'Locked'
+                    END
+                from event_crf ec,  dn_event_crf_map decm
+                where dn.discrepancy_note_id= decm.discrepancy_note_id
+                and decm.event_crf_id=ec.event_crf_id)
+            END as crf_status,
+            CASE when dn.entity_type='itemData' then
+                (select it.name from item it, item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and didm.item_data_id=idata.item_data_id
+                and idata.item_id=it.item_id)
+                when dn.entity_type='eventCrf' then
+                (select decm.column_name from dn_event_crf_map decm
+                where dn.discrepancy_note_id= decm.discrepancy_note_id)
+                when dn.entity_type='studyEvent' then
+                (select dsem.column_name from dn_study_event_map dsem
+                where dn.discrepancy_note_id= dsem.discrepancy_note_id)
+                when dn.entity_type='studySub' then
+                (select dssm.column_name from dn_study_subject_map dssm
+                where dn.discrepancy_note_id= dssm.discrepancy_note_id)
+                when dn.entity_type='subject' then
+                (select dsm.column_name from dn_subject_map dsm
+                where dn.discrepancy_note_id= dsm.discrepancy_note_id)
+            END as entity_name,
+            CASE when dn.entity_type='itemData' then
+                (select idata.value from item_data idata, dn_item_data_map didm
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and didm.item_data_id=idata.item_data_id)
+                when dn.entity_type='eventCrf' then
+                (select
+                    CASE
+                    WHEN decm.column_name='interviewer_name' then ec.interviewer_name
+                    WHEN decm.column_name='date_interviewed' then (ec.date_interviewed || '')
+                    END
+                    from dn_event_crf_map decm, event_crf ec
+                    where dn.discrepancy_note_id=decm.discrepancy_note_id
+                    and decm.event_crf_id=ec.event_crf_id)
+                when dn.entity_type='studyEvent' then
+                (select CASE
+                    WHEN dsem.column_name='date_start' then (se.date_start || '')
+                    WHEN dsem.column_name='date_end' then (se.date_end || '')
+                    WHEN dsem.column_name='location' then se.location
+                    END
+                    from dn_study_event_map dsem, study_event se
+                    where dn.discrepancy_note_id=dsem.discrepancy_note_id
+                    and dsem.study_event_id=se.study_event_id)
+                when dn.entity_type='studySub' then
+                (select (ss.enrollment_date || '')
+                    from dn_study_subject_map dssm, study_subject ss
+                    where dn.discrepancy_note_id=dssm.discrepancy_note_id
+                    and dssm.study_subject_id=ss.study_subject_id)
+                when dn.entity_type='subject' then
+                (select
+                    CASE
+                    WHEN dsm.column_name='gender' then s.gender
+                    WHEN dsm.column_name='date_of_birth' then (s.date_of_birth || '')
+                    WHEN dsm.column_name='unique_identifier' then s.unique_identifier
+                    END
+                    from dn_subject_map dsm, subject s
+                    where dn.discrepancy_note_id=dsm.discrepancy_note_id
+                    and dsm.subject_id=s.subject_id)
+            END as entity_value,
+            CASE when dn.entity_type='itemData' then
+                (select it.item_data_type_id from dn_item_data_map didm, item_data idata, item it
+                where dn.discrepancy_note_id= didm.discrepancy_note_id
+                and idata.item_data_id=didm.item_data_id
+                and idata.item_id=it.item_id)
+            END as item_data_type
+            FROM discrepancy_note dn, study st
+            WHERE dn.parent_dn_id is null
+            AND dn.study_id = st.study_id
+        </sql>
+    </changeSet>
+</databaseChangeLog>
