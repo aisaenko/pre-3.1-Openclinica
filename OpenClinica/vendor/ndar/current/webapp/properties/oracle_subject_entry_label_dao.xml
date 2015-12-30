@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>
+		 SELECT * FROM SUBJECTENTRYLABEL WHERE SUBJECTENTRYLABEL_ID = ?
+		</sql>
+	</query>
+	<query>
+		<name>findByLabel</name>
+		<sql>
+		 SELECT * FROM SUBJECTENTRYLABEL WHERE LABEL = ?
+		</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>
+		 SELECT * FROM SUBJECTENTRYLABEL
+		</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO SUBJECTENTRYLABEL
+		   (LABEL,DESCRIPTION,OWNER_ID,DATE_CREATED)
+		   VALUES (?,?,?,SYSDATE)
+		</sql>
+	</query>	
+	<query>
+		<name>update</name>
+		<sql>UPDATE SUBJECTENTRYLABEL SET LABEL=?,DESCRIPTION=?,UPDATE_ID=?,
+		DATE_UPDATED=SYSDATE WHERE SUBJECTENTRYLABEL_ID=?</sql>
+	</query>
+	<query>
+		<name>delete</name>
+		<sql>DELETE FROM SUBJECTENTRYLABEL WHERE SUBJECTENTRYLABEL_ID=?</sql>
+	</query>	
+</queries>

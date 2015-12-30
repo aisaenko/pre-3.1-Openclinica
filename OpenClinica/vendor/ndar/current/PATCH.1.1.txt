@@ -1,0 +1,46 @@
+PATCH PROCEDURE for OpenClinica
+OpenClinica Version 1.1
+Document Version 1.0
+--------------------------------------------------------------
+Updated: June 8, 2006 thickerson@akazaresearch.com, jsampson@akazaresearch.com
+
+These instructions allow you to fix the file structure for versions of OpenClinica older than 1.03.
+
+Download the 1.1 version (Linux or Windows distributions).
+Shutdown Tomcat.
+Take the new OpenClinica.war file and drop it in the $CATALINA_HOME/webapps folder.
+View the existing $CATALINA_HOME/webapps/OpenClinica/properties/datainfo.properties filePath and make a note of it.
+Update the $CATALINA_HOME/webapps/OpenClinica/properties/datainfo.properties filePath property to reflect an appropriate directory to store the application’s data files(e.g. c:\\tomcat\\openclinica.data\\ on windows or /usr/share/tomcat/openclinica.data/ on linux)
+Create a directory inside the filePath directory called “crf” if it is not there
+Create two directories inside the “crf” directory called “original” and "new"
+Go to the old filePath.
+Move the whole “datasets” folder to the filePath.
+Move the CRF_Design_Template.xls to "crf/".
+Move all of the crf version template files to the “crf/new/” folder. (e.g. 1v1.0.xls, 1v1.1.xls, 2v1.0.xls, etc)
+Move all of the original template files to the “crf/original/” folder. (e.g. AdverseEvents.xls, PhysicalExam.xls, etc.)
+(On Linux, make sure all of these files and folders are owned by the tomcat user)
+Startup the program you use to access the postgres database (usually this is psql on Linux, pgAdmin on Windows).
+Run the following SQL statements on the database:
+
+insert into discrepancy_note_type values(1,'Failed Validation Check','');
+insert into discrepancy_note_type values(2,'Incomplete','');
+insert into discrepancy_note_type values(3,'Unclear/Unreadable','');
+insert into discrepancy_note_type values(4,'Annotation','');
+insert into discrepancy_note_type values(5,'Other','');
+insert into resolution_status values(1,'New/Open','');
+insert into resolution_status values(2,'Updated','');
+insert into resolution_status values(3,'Resolved/Closed','');
+
+Startup Tomcat 
+
++---filePath
++---crf                                 -  crf  blank template (CRF_Design_Template.xls )
+      +---new                           -  crf verion templates reorganized by system (.xls)
+      +---original                      - crf original templates uploaded from user's local machine (.xls)
++---datasets
+    +---21                              - dataset files (.txt, .dat, .sps)
+    +---22                              - dataset files (.txt, .dat, .sps)
+    +---25                              - dataset files (.txt, .dat, .sps)
+    +---etc.                            - dataset files (.txt, .dat, .sps)
+
+ 

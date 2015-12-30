@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>createTableScoreByCRFVersionNameAndCRFName</name>
+		<sql>INSERT INTO SCORE_REF_TABLE (CRF_VERSION_ID, SCORE_REF_TABLE_NAME, DESCRIPTION) 
+		VALUES ((SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)),?,?)</sql>
+	</query>	
+	<query>
+		<name>createTableScoreAttributesByCRFVersionNameAndCRFName</name>
+		<sql>INSERT INTO SCORE_ATTRIBUTE (score_ref_table_id, score_attribute_name, DESCRIPTION) 
+		VALUES ((SELECT SCORE_REF_TABLE_id FROM SCORE_REF_TABLE WHERE CRF_VERSION_ID = (SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)) AND SCORE_REF_TABLE_NAME = ?),?,?)</sql>
+	</query>
+	<query>
+		<name>createAttributeValue</name>
+		<sql>INSERT INTO score_attribute_value (score_attribute_id, score_attribute_charvalue, score_attribute_recnumber) 
+		VALUES ((SELECT score_attribute_id FROM SCORE_ATTRIBUTE WHERE SCORE_REF_TABLE_id =(SELECT SCORE_REF_TABLE_id FROM SCORE_REF_TABLE WHERE CRF_VERSION_ID = (SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?) AND SCORE_REF_TABLE_NAME = ?) ) AND score_attribute_name = ? ),?,?)</sql>
+	</query>
+	<query>
+		<name>selectTableID</name>
+		<sql>select score_ref_table_id from score_ref_table 
+		where score_ref_table_name=? and CRF_VERSION_ID=?</sql>
+	</query>	
+	<query>
+		<name>selectAttributeValue</name>
+		<sql>select score_attribute_charvalue from score_attribute_value 
+		where score_attribute_id=
+		(select score_attribute_id from score_attribute where score_attribute_name = ? and score_ref_table_id=?)
+		and score_attribute_recnumber = 
+		(select a.score_attribute_recnumber from score_attribute_value a, score_attribute_value b
+		where a.score_attribute_id=
+		(select score_attribute_id from score_attribute where score_attribute_name = ? and score_ref_table_id=?)
+		and a.score_attribute_charvalue like '%-?-%' 
+		and a.score_attribute_recnumber = b.score_attribute_recnumber 
+		and b.score_attribute_id=
+		(select score_attribute_id from score_attribute where score_attribute_name = ? and score_ref_table_id=?) 
+		and b.score_attribute_charvalue like '%-?-%')</sql>
+	</query>	
+</queries>

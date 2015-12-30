@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM FORM_USAGE_COUNT WHERE 
+		FORM_USAGE_COUNT_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM FORM_USAGE_COUNT</sql>
+	</query>
+	<query>
+		<name>findAllByCRF</name>
+		<sql>SELECT fuc.* FROM FORM_USAGE_COUNT fuc, CRF_VERSION cv where cv.crf_version_id = fuc.crf_version_id and cv.crf_id=?</sql>
+	</query>
+	<query>
+		<name>findAllByPublisher</name>
+		<sql>SELECT fuc.* FROM FORM_USAGE_COUNT fuc, CRF_VERSION cv where cv.crf_version_id = fuc.crf_version_id and cv.publisher_id=?</sql>
+	</query>
+	<query>
+		<name>findByCrfVersion</name>
+		<sql>SELECT * FROM FORM_USAGE_COUNT where crf_version_id=?</sql>
+	</query>
+	<query>
+		<name>getCurrentPK</name>
+		<sql>SELECT form_usage_count_seq.currval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>getNextPK</name>
+		<sql>SELECT form_usage_count_seq.nextval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO FORM_USAGE_COUNT (FORM_USAGE_COUNT_ID,CRF_VERSION_ID,COUNT_PURCHASED,COUNT_USED) 
+		VALUES (?,?,?,?)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE FORM_USAGE_COUNT SET CRF_VERSION_ID=?,COUNT_PURCHASED=?,COUNT_USED=? WHERE 
+		FORM_USAGE_COUNT_ID=?</sql>
+	</query>
+	<query>
+		<name>updateUsageByCrfVersion</name>
+		<sql>UPDATE FORM_USAGE_COUNT SET COUNT_USED=? WHERE 
+		CRF_VERSION_ID=?</sql>
+	</query>
+	<query>
+		<name>incrementCountUsageByCrfVersion</name>
+		<sql>UPDATE FORM_USAGE_COUNT SET COUNT_USED=COUNT_USED+1 WHERE 
+		CRF_VERSION_ID=?</sql>
+	</query>
+	<query>
+		<name>delete</name>
+		<sql>DELETE FROM FORM_USAGE_COUNT WHERE FORM_USAGE_COUNT_ID=?</sql>
+	</query>
+</queries>

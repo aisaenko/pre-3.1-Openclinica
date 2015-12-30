@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+	<query>
+		<name>create</name>
+		<sql>
+			INSERT INTO VERSIONING_MAP (CRF_VERSION_ID, ITEM_ID) 
+			VALUES ((SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)),
+			(SELECT max(ITEM_ID) FROM ITEM WHERE NAME=? AND OWNER_ID = ? GROUP BY NAME, OWNER_ID))
+      	</sql>
+	</query>
+</queries>

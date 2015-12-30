@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM SECTION WHERE 
+		SECTION_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM SECTION</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO SECTION (CRF_VERSION_ID, STATUS_ID, LABEL, TITLE,
+		INSTRUCTIONS, SUBTITLE, PAGE_NUMBER_LABEL, ORDINAL, PARENT_ID,
+		OWNER_ID, DATE_CREATED) 
+		VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE SECTION SET CRF_VERSION_ID=?,STATUS_ID=?,LABEL=?,
+		TITLE=?,INSTRUCTIONS=?,SUBTITLE=?,PAGE_NUMBER_LABEL=?,ORDINAL=?,
+		DATE_UPDATED=SYSDATE,UPDATE_ID=? WHERE 
+		SECTION_ID=?</sql>
+	</query>
+	<query>
+		<name>findByVersionId</name>
+		<sql>SELECT * FROM SECTION WHERE CRF_VERSION_ID=?</sql>
+	</query>
+</queries>

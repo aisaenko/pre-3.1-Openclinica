@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM EVENT_CRF WHERE 
+		EVENT_CRF_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM EVENT_CRF</sql>
+	</query>
+	<query>
+		<name>delete</name>
+		<sql>delete FROM EVENT_CRF where event_crf_id=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO EVENT_CRF (STUDY_EVENT_ID, CRF_VERSION_ID, 
+		DATE_INTERVIEWED, INTERVIEWER_NAME, COMPLETION_STATUS_ID, STATUS_ID, 
+		ANNOTATIONS, OWNER_ID,
+		DATE_CREATED, STUDY_SUBJECT_ID, VALIDATE_STRING, VALIDATOR_ANNOTATIONS, FORM_USAGE_COUNT_ID) 
+		VALUES (?,?,?,?,?,?,?,?,SYSDATE,?, ?, ?, ?)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+			UPDATE EVENT_CRF
+			SET STUDY_EVENT_ID=?
+				, CRF_VERSION_ID=?
+				, DATE_INTERVIEWED=?
+				, INTERVIEWER_NAME=?
+				, COMPLETION_STATUS_ID=?
+				, STATUS_ID=?
+				, ANNOTATIONS=?
+				, DATE_COMPLETED=?
+				, VALIDATOR_ID=?
+				, DATE_VALIDATE=?
+				, DATE_VALIDATE_COMPLETED=?
+				, VALIDATOR_ANNOTATIONS=?
+				, VALIDATE_STRING=?
+				, STUDY_SUBJECT_ID=?
+				, DATE_UPDATED=SYSDATE
+				, UPDATE_ID=?
+				, FORM_USAGE_COUNT_ID=?
+			WHERE EVENT_CRF_ID=?
+		</sql>
+	</query>
+	<query>
+		<name>findAllByStudyEvent</name>
+		<sql>SELECT * FROM event_crf WHERE study_event_id=?</sql>
+	</query>
+	<query>
+		<name>findByPKAndStudy</name>
+		<sql>SELECT EC.*
+			FROM event_crf EC, study_subject SS, study st
+			WHERE EC.study_subject_id = SS.study_subject_id
+				AND EC.event_crf_id = ?
+				AND SS.study_id=st.study_id
+				AND (st.study_id = ? or st.parent_study_id=?)
+		</sql>
+	</query>
+	<query>
+		<name>getCurrentPK</name>
+		<sql>SELECT event_crf_seq.currval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>findAllByCRF</name>
+		<sql>select ec.* from event_crf  ec, crf c ,crf_version cv
+		 where ec.crf_version_id=cv.crf_version_id
+		 and c.crf_id=cv.crf_id
+		 and c.crf_id=? 
+		 </sql>
+	</query>
+	<query>
+		<name>findAllByCRFVersion</name>
+		<sql>select ec.* from event_crf  ec, crf_version cv
+		 where ec.crf_version_id=cv.crf_version_id
+		  and cv.crf_version_id=? 
+		 </sql>
+	</query>
+	<query>
+		<name>countAllRequiredByStudyEvent</name>
+		<sql>SELECT COUNT(DISTINCT cv.crf_id)
+               FROM event_crf ec,
+                    event_definition_crf edc,
+                    crf_version cv
+              WHERE ec.CRF_VERSION_ID = cv.CRF_VERSION_ID
+                AND edc.CRF_ID = cv.CRF_ID
+                AND edc.REQUIRED_CRF = 1
+                AND edc.STATUS_ID &lt;&gt; 5
+                AND ec.STUDY_EVENT_ID = ?
+                AND ec.STATUS &lt;&gt; 5
+        </sql>
+	</query>
+	<query>
+		<name>markCompleteIDE</name>
+		<sql>
+			UPDATE EVENT_CRF
+			SET DATE_COMPLETED=SYSDATE
+			WHERE EVENT_CRF_ID=?
+		</sql>
+	</query>	
+	<query>
+		<name>markCompleteDDE</name>
+		<sql>
+			UPDATE EVENT_CRF
+			SET DATE_VALIDATE_COMPLETED=SYSDATE
+			WHERE EVENT_CRF_ID=?
+		</sql>
+	</query>	
+	<query>
+		<name>createWithEventAndStudySubject</name>
+		<sql>INSERT INTO EVENT_CRF (STUDY_EVENT_ID, CRF_VERSION_ID, 
+		DATE_INTERVIEWED, INTERVIEWER_NAME, COMPLETION_STATUS_ID, STATUS_ID, 
+		ANNOTATIONS, OWNER_ID,
+		DATE_CREATED, STUDY_SUBJECT_ID, VALIDATE_STRING, VALIDATOR_ANNOTATIONS, FORM_USAGE_COUNT_ID) 
+		VALUES (study_event_seq.currval,?,?,?,?,?,?,?,SYSDATE,study_subject_seq.currval, ?, ?, ?)</sql>
+	</query>
+</queries>

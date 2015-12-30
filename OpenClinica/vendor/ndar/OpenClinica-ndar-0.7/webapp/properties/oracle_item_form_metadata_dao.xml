@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+		FROM item_form_metadata m, response_set rs 
+		WHERE m.item_form_metadata_id = ?
+		AND m.response_set_id = rs.response_set_id</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+		FROM item_form_metadata m, response_set rs 
+		WHERE m.response_set_id = rs.response_set_id</sql>
+	</query>
+	<query>
+		<name>findAllByCRFVersionId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+			FROM item_form_metadata m, response_set rs
+			WHERE m.crf_version_id=?
+				AND m.response_set_id = rs.response_set_id
+		</sql>
+	</query>
+   <query>
+		<name>findAllByItemId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, 
+            rs.options_values, cv.name as cvname
+			FROM item_form_metadata m, response_set rs, crf_version cv
+			WHERE m.item_id=?
+				AND m.response_set_id = rs.response_set_id
+                AND cv.crf_version_id = m.crf_version_id
+		</sql>
+	</query>
+	<query>
+		<name>findAllBySectionId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+			FROM item_form_metadata m, response_set rs
+			WHERE m.section_id=?
+				AND m.response_set_id = rs.response_set_id
+		</sql>
+	</query>
+	<query>
+		<name>findAllByCRFVersionIdAndSectionId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+			FROM item_form_metadata m, response_set rs
+			WHERE m.crf_version_id=? And m.section_id=?
+				AND m.response_set_id = rs.response_set_id
+		</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+			INSERT INTO
+				item_form_metadata (
+					item_form_metadata_id,
+					item_id,
+                    crf_version_id,
+                    header,
+                    subheader,
+                    parent_id,
+                    parent_label,
+                    column_number,
+                    page_number_label,
+                    question_number_label,
+                    left_item_text,
+                    right_item_text,
+                    section_id,
+                    decision_condition_id,
+                    response_set_id,
+                    regexp,
+                    regexp_error_msg,
+                    ordinal,
+                    required )
+			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>createByCRFVersionNameAndCRFNameWithoutParent</name>
+		<sql>
+			INSERT INTO ITEM_FORM_METADATA (
+				CRF_VERSION_ID, 
+				RESPONSE_SET_ID,
+                ITEM_ID,
+                SUBHEADER,
+                HEADER,
+                LEFT_ITEM_TEXT,
+                RIGHT_ITEM_TEXT,
+                PARENT_ID,
+                SECTION_ID,
+                ORDINAL,
+                PARENT_LABEL,
+                COLUMN_NUMBER,
+                PAGE_NUMBER_LABEL,
+                QUESTION_NUMBER_LABEL,
+                REGEXP,
+                REGEXP_ERROR_MSG,
+                REQUIRED) 
+            VALUES (
+            	(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)),
+                (SELECT RESPONSE_SET_ID FROM RESPONSE_SET WHERE LABEL=? AND VERSION_ID=(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?))),
+                (SELECT max(ITEM_ID) FROM ITEM WHERE NAME=? AND OWNER_ID = ? GROUP BY NAME, OWNER_ID),
+                ?,?,?,?,?, 
+                (SELECT SECTION_ID FROM SECTION WHERE LABEL=? AND CRF_VERSION_ID IN (SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?))), 
+                ?,?,?,?,?,?,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>createByCRFVersionNameAndCRFNameWithParent</name>
+		<sql>
+			INSERT INTO ITEM_FORM_METADATA (
+				CRF_VERSION_ID, 
+				RESPONSE_SET_ID,
+                ITEM_ID,
+                SUBHEADER,
+                HEADER,
+                LEFT_ITEM_TEXT,
+                RIGHT_ITEM_TEXT,
+                PARENT_ID,
+                SECTION_ID,
+                ORDINAL,
+                PARENT_LABEL,
+                COLUMN_NUMBER,
+                PAGE_NUMBER_LABEL,
+                QUESTION_NUMBER_LABEL,
+                REGEXP,
+                REGEXP_ERROR_MSG,
+                REQUIRED) 
+            VALUES (
+            	(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)),
+                (SELECT RESPONSE_SET_ID FROM RESPONSE_SET WHERE LABEL=? AND VERSION_ID=(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?))),
+                (SELECT max(ITEM_ID) FROM ITEM WHERE NAME=? AND OWNER_ID = ? GROUP BY NAME, OWNER_ID),
+                ?,?,?,?,
+                (SELECT max(ITEM_ID) FROM ITEM WHERE NAME=? AND OWNER_ID = ? GROUP BY NAME, OWNER_ID), 
+                (SELECT SECTION_ID FROM SECTION WHERE LABEL=? AND CRF_VERSION_ID IN (SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?))), 
+                ?,?,?,?,?,?,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+			UPDATE item_form_metadata
+			SET
+					item_id=?,
+                    crf_version_id=?,
+                    header=?,
+                    subheader=?,
+                    parent_id=?,
+                    parent_label=? ,
+                    column_number=?,
+                    page_number_label=?,
+                    question_number_label=?,
+                    left_item_text=?,
+                    right_item_text=?,
+                    section_id=?,
+                    decision_condition_id=?,
+                    response_set_id=?,
+                    regexp=?,
+                    regexp_error_msg=?,
+                    ordinal=?,
+                    required =?
+			WHERE item_form_metadata_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findByItemIdAndCRFVersionId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+			FROM item_form_metadata m, response_set rs
+			WHERE m.item_id=?
+				AND m.crf_version_id=?
+				AND m.response_set_id = rs.response_set_id
+		</sql>
+	</query>
+	<query>
+	 <name>findResponseSetByPK</name>
+	 <sql>select rs.*, rt.* from response_set rs, response_type rt
+	  where rs.response_type_id=rt.response_type_id
+	  and rs.response_set_id=?
+	 </sql>
+	</query>
+	<query>
+		<name>findAllByCRFVersionIdAndResponseTypeId</name>
+		<sql>
+			SELECT m.*, rs.response_type_id, rs.label, rs.options_text, rs.options_values
+			FROM item_form_metadata m, response_set rs
+			WHERE m.crf_version_id=? AND m.response_set_id = rs.response_set_id AND rs.response_type_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>getCurrentPK</name>
+		<sql> select item_form_metadata_seq.currval as key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>getNextPK</name>
+		<sql> select item_form_metadata_seq.nextval as key FROM DUAL</sql>
+	</query>
+	
+</queries>

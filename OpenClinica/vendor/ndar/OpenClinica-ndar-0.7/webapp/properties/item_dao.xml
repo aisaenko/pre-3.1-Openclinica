@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM ITEM WHERE 
+		ITEM_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM ITEM</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO ITEM (NAME, DESCRIPTION, UNITS, PHI_STATUS,
+		ITEM_DATA_TYPE_ID, ITEM_REFERENCE_TYPE_ID, STATUS_ID, OWNER_ID,
+		DATE_CREATED) 
+		VALUES (?,?,?,?,?,?,?,?,NOW())</sql>
+	</query>
+	<query>
+		<name>createByDataTypeCode</name>
+		<sql>INSERT INTO ITEM (NAME, DESCRIPTION, UNITS, PHI_STATUS,
+		ITEM_DATA_TYPE_ID, ITEM_REFERENCE_TYPE_ID, STATUS_ID, OWNER_ID,
+		DATE_CREATED) 
+		VALUES (?,?,?,?,(SELECT ITEM_DATA_TYPE_ID From ITEM_DATA_TYPE Where CODE=?),?,?,?,NOW())</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE ITEM SET NAME=?,DESCRIPTION=?,UNITS=?,
+		PHI_STATUS=?,ITEM_DATA_TYPE_ID=?,ITEM_REFERENCE_TYPE_ID=?,STATUS_ID=?,
+		DATE_UPDATED=NOW(),UPDATE_ID=? WHERE 
+		ITEM_ID=?</sql>
+	</query>
+	<query>
+		<name>updateByOther</name>
+		<sql>
+			UPDATE ITEM SET DESCRIPTION=?,PHI_STATUS=? 
+			FROM versioning_map, crf_version 
+			WHERE item.name=? AND item.owner_id = ? AND item.item_id = versioning_map.item_id AND versioning_map.crf_version_id = crf_version.crf_version_id AND crf_version.crf_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>updateByDataTypeCode</name>
+		<sql>
+			UPDATE ITEM SET DESCRIPTION=?,UNITS=?,PHI_STATUS=?,
+			ITEM_DATA_TYPE_ID= (SELECT ITEM_DATA_TYPE_ID From ITEM_DATA_TYPE Where CODE=?) 
+			FROM versioning_map, crf_version WHERE item.name=? AND item.owner_id = ? 
+			AND item.item_id = versioning_map.item_id AND 
+			versioning_map.crf_version_id = crf_version.crf_version_id AND crf_version.crf_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findByName</name>
+		<sql>select * from item  
+		where name=?
+		</sql>
+	</query>
+	<query>
+		<name>findByNameAndCRFId</name>
+		<sql>
+			select distinct i.* from item i, item_form_metadata ifm,crf_version c 
+            where i.name=?
+            and i.item_id= ifm.item_id 
+            and ifm.crf_version_id=c.crf_version_id 
+            and c.crf_id=?
+		</sql>
+	</query>
+	<query>
+		<name>findAllParentsBySectionId</name>
+		<sql>
+			SELECT i.* FROM item i, item_form_metadata m
+			WHERE i.item_id = m.item_id
+				AND (m.parent_id = 0 or m.parent_id is null)
+				AND m.section_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findAllByParentIdAndCRFVersionId</name>
+		<sql>
+			SELECT i.*
+			FROM item i, item_form_metadata m
+			WHERE i.item_id = m.item_id AND m.parent_id = ? AND m.crf_version_id = ?
+			ORDER BY m.column_number ASC
+		</sql>
+	</query>
+	<query>
+		<name>findAllItemsByVersionId</name>
+		<sql>select i.* from versioning_map v, item i 
+		where v.item_id =i.item_id and v.crf_version_id=?
+		</sql>
+	</query>
+    <query>
+       <name>findAllVersionsByItemId</name>
+       <sql>
+         select crf_version_id from versioning_map
+         where item_id=?   
+       </sql>
+    </query>
+	<query>
+		<name>findAllActiveByCRF</name>
+		<sql>
+		 select i.*, cv.crf_version_id, cv.name as cvname
+		 from item i, item_form_metadata ifm, crf_version cv
+         where i.item_id=ifm.item_id
+         and cv.crf_version_id = ifm.crf_version_id
+		 and i.status_id=1
+         and cv.crf_id=?
+         order by i.item_id
+		</sql>
+	</query>
+</queries>

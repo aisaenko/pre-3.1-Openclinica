@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM SKIP_RULE WHERE RULE_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAllByCrfVersionId</name>
+		<sql>SELECT * FROM SKIP_RULE WHERE CRF_VERSION_ID=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO SKIP_RULE (NAME, INSTRUCTION_TEXT, CONDITION, ASSIGNMENTS,
+		CRF_VERSION_ID, STATUS_ID, DATE_CREATED, OWNER_ID) 
+		VALUES (?,?,?,?,?,?,NOW(),?)</sql>
+	</query>
+	<query>
+		<name>createByCRFVersionNameAndCRFName</name>
+		<sql>INSERT INTO SKIP_RULE (NAME, INSTRUCTION_TEXT, CONDITION, ASSIGNMENTS,
+		CRF_VERSION_ID, STATUS_ID, DATE_CREATED, OWNER_ID) 
+		VALUES (?,?,?,?,(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)),?,NOW(),?)</sql>
+	</query>
+</queries>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM SUBJECT_SUBJECTENTRYLABEL WHERE SUBJECT_SUBJECTENTRYLABEL_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM SUBJECT_SUBJECTENTRYLABEL</sql>
+	</query>
+	<query>
+		<name>findAllBySubjectEntryLabelId</name>
+		<sql>SELECT * FROM SUBJECT_SUBJECTENTRYLABEL WHERE SUBJECTENTRYLABEL_ID=?</sql>
+	</query>
+	<query>
+		<name>findAllBySubjectId</name>
+		<sql>SELECT * FROM SUBJECT_SUBJECTENTRYLABEL WHERE SUBJECT_ID=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO SUBJECT_SUBJECTENTRYLABEL(SUBJECT_ID,SUBJECTENTRYLABEL_ID) VALUES (?,?)</sql>
+	</query>
+	<query>
+		<name>delete</name>
+		<sql>DELETE FROM SUBJECT_SUBJECTENTRYLABEL WHERE SUBJECT_SUBJECTENTRYLABEL_ID=?</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE SUBJECT_SUBJECTENTRYLABEL SET SUBJECT_ID=?,SUBJECTENTRYLABEL_ID=? WHERE SUBJECT_SUBJECTENTRYLABEL_ID=?</sql>
+	</query>
+</queries>

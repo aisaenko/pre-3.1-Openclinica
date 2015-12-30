@@ -1,0 +1,70 @@
+1.	Upgrading to OpenClinica 2.0
+-----------------------------------
+Document Version 1.0
+--------------------------------------------------------------
+Updated: October 29, 2006 jsampson@akazaresearch.com
+
+
+1.1.	Introduction
+-----------------------------------
+The following document is a guide for upgrading a version of OpenClinica 1.1 to 2.0. This document is written for the Linux platform, and might vary slightly on different systems.
+
+1.2.	Preparation
+----------------------------------
+We will assume the following:
+
+- You already have installed and been using Openclinica 1.1.
+
+- You are running the software stack as detailed in the INSTALL-Linux.txt (Tomcat 5.5.x, Postgres 8.1.4x, Java SDK 5.0 Update 6.0)
+
+- You unpacked the 2.0 tarball file in /var/OpenClinica-2.0/ 
+
+- Your $CATALINA_HOME=/usr/share/tomcat/
+
+- Your webapp is named OpenClinica (i.e. $CATALINA_HOME=/usr/share/tomcat/webapps/OpenClinica) 
+
+- You have shutdown Tomcat, and left postgres running.
+
+1.3.	Instructions
+----------------------------------
+Summary of actions:
+
+1. Apply a schema patch to the database.
+2. Deploy the new war file to the tomcat webapps folder.
+3. Make the necessary libraries available to tomcat.
+
+1.4 Detailed Instructions
+---------------------------------
+Log on to your server as postgres and use psql.exe to apply the schema patach:
+su
+su -postgres
+psql -d openclinica -f /var/OpenClinica-2.0/database/PostgreSQL/1.1/upgrade/schema_patch_1.1_to_2.0.sql
+
+Log on your server as tomcat and update the war file.
+su
+su - tomcat
+
+Copy your configuration files to a safe location (outside of the webapps/OpenClinica folder) for future reference
+$CATALINA_HOME/webapps/OpenClinica/properties/datainfo.properties
+$CATALINA_HOME/webapps/OpenClinica/properties/facilityinfo.properties
+$CATALINA_HOME/webapps/OpenClinica/conf/Catalina/localhost/OpenClinica.xml
+NOTE: The whole directory /usr/share/tomcat/webapps/OpenClinica will be recreated by the tomcat server as soon as the new file ‘.war’ is placed in the webapps folder and tomcat is resarted.  Note that this will not remove any CRF files or archived datasets, as these should be stored in a higher directory on your machine.
+
+cp /var/OpenClinica-2.0/lib/OpenClinica.war $CATALINA_HOME/webapps
+cp /var/OpenClinica-2.0/conf/OpenClinica.xml $CATALINA_HOME/conf/Catalina/localhost
+NOTE: Using OpenClinica 2.0 with Tomcat 5.5 uses a different format for OpenClinica.xml file, it will be helpful to refer to your old file to set the parameters up correctly in this new xml file.
+
+cp /var/OpenClinica-2.0/lib/*.jar $CATALINA_HOME/common/lib
+
+Start tomcat
+
+Overwrite 
+$CATALINA_HOME/webapps/OpenClinica/properties/datainfo.properties
+$CATALINA_HOME/webapps/OpenClinica/properties/facilityinfo.properties
+with your previous versions of those files.
+
+Restart the OpenClinica application using the Tomcat manager.
+
+
+
+

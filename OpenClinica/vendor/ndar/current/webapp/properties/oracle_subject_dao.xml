@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM subject WHERE 
+		subject_id = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM subject</sql>
+	</query>
+    <query>
+		<name>findAnotherByIdentifier</name>
+		<sql>
+        SELECT * FROM subject WHERE 
+		unique_identifier = ? and subject_id !=?
+        </sql>
+	</query>
+	<query>
+		<name>findAllByLimit</name>
+		<sql>SELECT * FROM (SELECT * FROM subject order by nvl(date_updated, date_created) desc) WHERE rownum &lt;= 5</sql>
+	</query>
+	<query>
+		<name>findAllChildrenByPK</name>
+		<sql>SELECT * FROM subject where mother_id=? or father_id=?</sql>
+	</query>
+	<query>
+		<name>findByUniqueIdentifier</name>
+		<sql>SELECT * FROM subject WHERE unique_identifier=?</sql>
+	</query>
+    <query>
+		<name>findByUniqueIdentifierAndStudy</name>
+		<sql>
+          SELECT s.* FROM subject s, study_subject ss, study st
+          WHERE s.subject_id=ss.subject_id
+          AND ss.study_id= st.study_id
+		  AND s.unique_identifier=? 
+          AND st.study_id=?
+        </sql>
+	</query>
+    <query>
+		<name>findByUniqueIdentifierAndParentStudy</name>
+		<sql>
+          SELECT s.* FROM subject s, study_subject ss, study st
+          WHERE s.subject_id=ss.subject_id
+          AND ss.study_id= st.study_id
+		  AND s.unique_identifier=? 
+          AND st.parent_study_id=?
+        </sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO subject 
+		   (SUBJECT_ID,FATHER_ID,MOTHER_ID, STATUS_ID, 
+		   DATE_OF_BIRTH,GENDER,UNIQUE_IDENTIFIER,DATE_CREATED,
+           OWNER_ID,DOB_COLLECTED) 
+		   VALUES (?,?,?,?,?,?,?,SYSDATE,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE subject SET FATHER_ID=?,MOTHER_ID=?, STATUS_ID=?, 
+		  DATE_OF_BIRTH=?,GENDER=?,UNIQUE_IDENTIFIER=?, DATE_UPDATED=?,
+		  UPDATE_ID=?,DOB_COLLECTED=? WHERE SUBJECT_ID=?
+	    </sql>
+	</query>
+	<query>
+		<name>getCurrentPrimaryKey</name>
+		<sql>SELECT subject_seq.currval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>getNextPrimaryKey</name>
+		<sql>SELECT subject_seq.nextval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>findAllMales</name>
+		<sql>SELECT * FROM subject WHERE gender='m'</sql>
+	</query>
+	<query>
+		<name>findAllFemales</name>
+		<sql>SELECT * FROM subject WHERE gender='f'</sql>
+	</query>
+	<query>
+		<name>findAllFemalesNotSelf</name>
+		<sql>SELECT * FROM subject WHERE gender='f' and subject_id !=? </sql>
+	</query>
+	<query>
+		<name>findAllMalesNotSelf</name>
+		<sql>SELECT * FROM subject WHERE gender='m' and subject_id !=? </sql>
+	</query>
+</queries>

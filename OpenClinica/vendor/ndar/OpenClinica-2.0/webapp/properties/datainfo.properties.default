@@ -1,0 +1,11 @@
+dbURL=jdbc:postgresql://127.0.0.01:5432/openclinica
+filePath=/usr/local/tomcat/openclinica.data/
+dataBase=postgres
+passwd_expiration_time=180 
+auth_mode=password
+user_account_notification=email
+smtpHost=localhost
+smtpDriver=localhost
+adminEmail=admin@openclinica.org
+sysURL=https://localhost:8080/OpenClinica/MainMenu
+change_passwd_required=0

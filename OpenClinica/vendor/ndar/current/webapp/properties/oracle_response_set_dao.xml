@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+	<query>
+		<name>create</name>
+		<sql>
+			INSERT INTO RESPONSE_SET (
+				LABEL, OPTIONS_TEXT, OPTIONS_VALUES, RESPONSE_TYPE_ID, VERSION_ID) 
+				VALUES (?,?,?,
+				(SELECT RESPONSE_TYPE_ID From RESPONSE_TYPE Where NAME=?),
+				(SELECT CRF_VERSION_ID FROM CRF_VERSION WHERE NAME = ? AND CRF_ID=(SELECT CRF_ID FROM CRF WHERE NAME = ?)))
+		</sql>
+	</query>
+</queries>

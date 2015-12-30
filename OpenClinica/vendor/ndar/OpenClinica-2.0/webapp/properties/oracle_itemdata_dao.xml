@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM ITEM_DATA WHERE 
+		ITEM_DATA_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM ITEM_DATA</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO ITEM_DATA (EVENT_CRF_ID, ITEM_ID, STATUS_ID, VALUE,
+		OWNER_ID, DATE_CREATED) 
+		VALUES (?,?,?,?,?,SYSDATE)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE ITEM_DATA SET EVENT_CRF_ID=?,ITEM_ID=?,STATUS_ID=?,
+		VALUE=?,DATE_UPDATED=SYSDATE,UPDATE_ID=? WHERE 
+		ITEM_DATA_ID=?</sql>
+	</query>
+</queries>

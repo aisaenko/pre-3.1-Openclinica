@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM study_template_event_def WHERE 
+		STUDY_TEMPLATE_EVENT_DEF_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAllByStudyTemplate</name>
+		<sql>SELECT sted.*, sed.name as event_name, sed.ordinal FROM study_template_event_def sted, study_event_definition sed 
+			WHERE sted.study_event_definition_id = sed.study_event_definition_id
+		    AND sted.study_template_id = ?
+			order by sed.ordinal  
+		</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM study_template_event_def</sql>
+	</query>
+		
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO study_template_event_def 
+		   (study_template_event_def_id,study_template_id,study_event_definition_id,
+            event_duration,ideal_time_to_next_event,
+			min_time_to_next_event,max_time_to_next_event,status_id,
+            owner_id,date_created) 
+		   VALUES (?,?,?,?,?,?,?,?,?,SYSDATE)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE study_template_event_def
+		  SET study_template_id=?,study_Event_definition_id=?,
+            event_duration=?,ideal_time_to_next_event=?,
+			min_time_to_next_event=?,max_time_to_next_event=?,
+			status_id=?,update_id=?,date_updated=?
+		  WHERE study_template_event_def_id=?
+	    </sql>
+	</query>
+	<query>
+		<name>getCurrentPrimaryKey</name>
+		<sql>SELECT study_template_event_seq.currval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>getNextPrimaryKey</name>
+		<sql>SELECT study_template_event_seq.nextval AS key FROM DUAL</sql>
+	</query>
+</queries>

@@ -1,0 +1,457 @@
+<?xml version="1.0"?>
+<project default="compile">
+
+<description>
+Initial Build file of Openclinica
+</description>
+
+<!-- ************initializes properties********************************************* -->
+<target name="init" description="Initializes properties and tokens">
+<tstamp>
+<format property="TSTAMP" pattern="HHmmss"/>
+<format property="DAYSTAMP" pattern="yyyyMMdd"/>
+</tstamp>
+
+<!-- Get global variables -->
+<property environment="env"/>
+<property name="lib.dir" value="lib"/>
+<!-- 
+===================================================================
+         Set the classpath      
+		=================================================================== 
+		-->
+  <path id="classpath">
+      <fileset dir="${lib.dir}">
+        <include name="**/*.jar"/>
+     	<include name="**/*.zip"/>
+      </fileset>
+  </path>
+
+
+<!-- Release information -->
+<property name="name" value="OpenClinica"/>
+<!-- <property name="majorReleaseNumber" value="0.2"/>-->
+    <loadfile property="majorReleaseNumber" srcFile="VERSION.txt"/>
+
+    <property name="release" value="${majorReleaseNumber}"/>
+    <property name="releaseFile" value="${basedir}/src/org/akaza/openclinica/control/MainMenuServlet.java"/>
+    <property name="overviewFile" value="${basedir}/src/org/akaza/openclinica/overview.html"/>
+
+    
+    <!-- Directories in CVS and in distributions -->
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="webapp.dir" value="${basedir}/webapp"/>
+
+    
+    <!-- Directories created by various build targets -->
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="build.webapp" value="${build.dir}/webapp"/>
+    <property name="build.src" value="${build.dir}/src"/>
+    <property name="build.dest" value="${build.dir}/classes"/>
+
+    
+    <!-- Generate Reports -->
+    <property name="doc.dir" value="${build.dir}/doc"/>
+    <property name="test.dir" value="${build.dir}/tests" />
+	  <property name="instrument.dir" value="${build.dir}/instrument"/>
+	  <property name="coverage.webapp" value="${build.dir}/coverage"/>
+
+    <!-- Directories created by various build targets -->
+    <property name="tmp.dir" value="${build.dir}/tmp"/>
+    <property name="dist.dir"  value="${build.dir}/dist"/>
+    <property name="dist.name" value="${name}-${release}"/>
+
+    <!-- Token for setting the release and buildTime string inside the source. -->
+    <filter token="release" value="${release}"/>
+    <filter token="buildTime" value="${TODAY} ${TSTAMP}"/>
+
+    </target>
+
+    <!-- **********prepare build enviroment******************************************* -->
+    <target name="prepare" depends="init"
+    description="Creates build directories and copies source files to them.">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.src}"/>
+    <mkdir dir="${build.dest}"/>
+	  <mkdir dir="${coverage.webapp}"/>
+	  <mkdir dir="${instrument.dir}"/>
+		<mkdir dir="${test.dir}"/>
+
+    <!-- Copy src files after touching Controller.java to update release. -->
+    <touch file="${releaseFile}"/>
+    <copy todir="${build.src}" filtering="on">
+    <fileset dir="${src.dir}">
+    <exclude name="**/*.class" />
+    </fileset>
+    </copy>
+    </target>
+
+    <!-- **********compile all java files***************************************************** -->
+    <target name="compile" depends="prepare"
+    description="Compiles code.">
+    <javac debug="on"  srcdir="${build.src}" destdir="${build.dest}">
+	<classpath refid="classpath"/>
+	</javac>
+	   </target>
+	   
+	   <!-- **********packages into jar file************************************************ -->
+	   <target name="package" depends="compile"
+    description="Create jar file consisting of all class files.">
+    <jar jarfile="${lib.dir}/${name}.jar"
+         basedir="${build.dest}"
+         manifest="${lib.dir}/manifest"
+         includes="org/**"/>
+	 </target>
+
+	 <!-- *********deletes build directory********************************************* -->
+	 <target name="clean" depends="init"
+    description="Delete build directory and misc other files.">
+    <delete dir="${build.dir}"/>
+    <!-- DEPRECATED: Delete backup files left by JBuilder, JRefactory, JUnit, etc.. -->
+    <delete>
+    <fileset dir="${basedir}" defaultexcludes="no" includes="**/*~"/>
+    <fileset dir="${basedir}" defaultexcludes="no" includes="**/*.jpx.local.*"/>
+    <fileset dir="${basedir}" defaultexcludes="no" includes="junit*.properties"/>
+    <fileset dir="${basedir}" includes="src/**/*.java.*"/>
+    </delete>
+    </target>
+
+
+    <!-- ************run junit tests************************************************* -->
+    <target name="test" depends="package"
+        description="Run JUnit tests (all classes whose name starts with Test) and generate a report.">
+  			<echo message="CLASSPATH: ${java.class.path}" />			
+	<!-- Run the tests, which are all classes whose name starts with 'Test'. -->
+	<junit printsummary="on">
+	<sysproperty key="catalina_home"  value="${env.CATALINA_HOME}" />
+	<sysproperty key="test_host"  value="${env.TEST_HOST}" />
+	<classpath path="${build.dir}/classes;${java.class.path}" />
+	<formatter type="xml" />
+	<batchtest todir="${test.dir}">
+	<fileset dir="${src.dir}">
+	<include name="**/*Test.java" />
+	</fileset>
+	</batchtest>
+	</junit>
+	<!-- Generate a report on the results. -->
+	<junitreport todir="${test.dir}">
+	  <fileset dir="${test.dir}">
+	      <include name="TEST-*.xml"/>
+	        </fileset>
+		  <report format="frames" todir="${test.dir}/html"/>
+		  </junitreport>
+		  <echo message="JUnit results in ${test.dir}/index.html" />
+		  </target>
+
+
+		  <!-- *********Create package with source, jar file, and doc********************** -->
+	<target name="dist" depends="clean,war,javadoc"
+    description="Create a distribution package with source, jar file, and documentation.">
+    <mkdir dir="${dist.dir}" />
+    <mkdir dir="${tmp.dir}/${dist.name}" />
+    
+    
+    <copy todir="${tmp.dir}/${dist.name}" >
+    <fileset dir="${basedir}">
+    <exclude name="**/CVS/*"/>
+    <exclude name="build/**"/>
+    </fileset>
+    </copy>
+
+	    <tar tarfile="${dist.dir}/${dist.name}.tar" basedir="${tmp.dir}" />
+			<gzip src="${dist.dir}/${dist.name}.tar" destfile="${dist.dir}/${dist.name}.tar.gz"/>
+
+	 </target>
+
+
+	 
+	 <!-- **********generate javadoc API************************************************* -->
+	 <target name="javadoc" depends="prepare"
+    description="Creates the JavaDoc API documentation.">
+    <mkdir dir="${doc.dir}"/>
+    <javadoc packagenames="org.*"
+             sourcepath="${build.src}"
+             destdir="${doc.dir}"
+             author="true"
+             version="true"
+    	     overview="${overviewFile}" 
+             use="true"
+             package="true"
+             splitindex="true"
+             noindex="false"
+             windowtitle="${name} ${release} API"
+             doctitle="${name} ${release} API"
+    />
+    <!-- overview="${overviewFile}" add this when ready -->
+    </target>
+
+    <!-- ************creates the war file*************************************** -->
+    <target name="war" depends="package" description="Creates the war file.">
+	  <!-- Create a webapp dir in build dir. This enables filtering. -->
+	  <mkdir dir="${build.webapp}"/>
+
+	  <!-- Update the WEB-INF/lib directory. -->
+	  <copy todir="${webapp.dir}/WEB-INF/lib" file="${lib.dir}/${name}.jar" overwrite="true" />
+	  
+	  <!-- Copy the html and jsp over with filtering. -->
+	  <copy todir="${build.webapp}" filtering="yes">
+	  <fileset dir="${webapp.dir}">
+	  <include name="**/*.html"/>
+	  <include name="**/*.jsp"/>
+	  </fileset>
+	  </copy>
+
+	  <!-- Now copy everything else without filtering. -->
+	  <copy todir="${build.webapp}" >
+	  <fileset dir="${webapp.dir}">
+	  <exclude name="**/*.html"/>
+	  <exclude name="**/*.jsp"/>
+	  </fileset>
+	  </copy>
+
+	  
+	  
+	  <war warfile="${lib.dir}/${name}.war" webxml="${webapp.dir}/WEB-INF/web.xml">
+	  <fileset dir="${build.webapp}">
+	  <exclude name="WEB-INF/**"/>
+	  </fileset>
+	  <webinf dir="${build.webapp}/WEB-INF" >
+	  <exclude name="web.xml"/>
+	  </webinf>
+	  </war>
+	  </target>
+
+
+	  <!-- *****************updatejsp****************************************************** -->
+	  <target name="updateJSP" depends="init"  description="Updates a configured Tomcat with latest versions of the JSP files.">
+	  <copy todir="${env.CATALINA_HOME}/webapps/${name}/WEB-INF/jsp">
+	  <fileset dir="${webapp.dir}/WEB-INF/jsp">
+	  <include name="**/*.jsp"/>
+	  <include name="**/*.html"/>
+	  </fileset>
+	  </copy>
+	  </target>
+
+	  <!-- ******************deploy***************************************************** -->
+	  <target name="deploy" depends="war"
+    description="Deletes existing application directory in webapps and copies war/jar files to Tomcat.">
+
+    <delete dir="${env.CATALINA_HOME}/webapps/${name}" failonerror="false" />
+    <copy file="${lib.dir}/${name}.war" todir="${env.CATALINA_HOME}/webapps" />
+    </target>
+    
+    <!-- ******************deploydev***************************************************** -->
+    <target name="deploydev" depends="war" description="Deletes existing application directory in webapps and copies war/jar files to Tomcat.">
+    <delete dir="${env.CATALINA_HOME}/webapps/OpenClinica-dev/" failonerror="false" />
+    <delete dir="${env.CATALINA_HOME}/webapps/OpenClinica-dev.war" failonerror="false" />
+    <copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/OpenClinica-dev.war" />
+    <copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/Performance.war" />
+    <copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/Content.war" />
+    <copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/Minimal.war" />
+    </target>
+    
+    <!-- ******************deploydemo***************************************************** -->
+    <target name="deploydemo" depends="war" description="Deletes existing application directory in webapps and copies war/jar files to Tomcat.">
+    <delete dir="${env.CATALINA_HOME}}/webapps/OpenClinica-demo/" failonerror="false" />
+    <copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/OpenClinica-demo.war" />
+    </target>
+    
+    <!-- ******************deploytest***************************************************** -->
+    <target name="deploytest" depends="war" description="Deletes existing application directory in webapps and copies war/jar files to Tomcat.">
+		<delete dir="${env.CATALINA_HOME}/webapps/OpenClinica-test/" failonerror="false" />
+	<copy file="${lib.dir}/${name}.war" tofile="${env.CATALINA_HOME}/webapps/OpenClinica-test.war" />
+	</target>
+	
+	
+
+	<!-- ******************undeploy***************************************************** -->
+		<target name="undeploy" depends="init" description="Removes web application from Tomcat.">
+    <delete dir="${env.CATALINA_HOME}/webapps/${name}" failonerror="false" />
+    <delete file="${env.CATALINA_HOME}/webapps/${name}.war" failonerror="false" />
+<!--    <delete dir="${env.CATALINA_HOME}/work/" failonerror="false" /> -->
+    </target>
+
+
+    <!-- ******************install-libs***************************************************** -->
+    <target name="install-libs" depends="init" description="Install libraries into Tomcat">
+
+
+		<!-- install in tomcat library path -->
+		<copy todir="${env.CATALINA_HOME}/common/lib/">
+			<fileset dir="lib/deps/" />
+		</copy>
+		
+    	<!-- create in cronjob library path -->
+    	<mkdir dir="/etc/openclinica/" />
+
+    	<!-- install in cron script library path -->
+    	<copy todir="/etc/openclinica/">
+    		<fileset dir="conf/" >
+    		<include name="*.sql"/>
+    	    </fileset>		
+    	</copy>
+
+	
+	    <!-- create in cronjob library path -->
+		<copy todir="/etc/cron.daily/">
+			<fileset dir="conf/" >
+				<include name="*.cron"/>
+	        </fileset>
+		</copy>
+
+
+
+	</target>
+	
+	<!-- ******************install-application***************************************************** -->
+	<target name="install" depends="install-libs" description="Install application and libraries">
+	<!-- copy war file -->
+	<copy todir="${env.CATALINA_HOME}/webapps/">
+	<fileset dir="lib/" >
+		<include name="*.war"/>
+	</fileset>	
+	</copy>
+	
+	<!-- copy context file -->
+	<copy overwrite="false" file="conf/OpenClinica.xml" todir="${env.CATALINA_HOME}/conf/Catalina/localhost/" />
+
+	<!-- copy default settings file -->
+	<copy overwrite="false" file="conf/datainfo.properties" todir="${env.CATALINA_HOME}/webapps/${name}/properties/" />
+	
+	</target>
+
+	<!-- *******************publish**************************************************** -->
+	<target name="publish" depends="init,dist" description="Places generated documentation, binaries and reports on web accessible directory.">
+	<mkdir dir="${env.PUBLISH_DIR}/builds/nightly"/>
+	<mkdir dir="${env.PUBLISH_DIR}/doc/OpenClinica"/>
+	<mkdir dir="${env.PUBLISH_DIR}/junit/OpenClinica"/>
+	<mkdir dir="${env.PUBLISH_DIR}/coverage/"/>
+	
+	<copy file="${dist.dir}/${dist.name}.tar" todir="${env.PUBLISH_DIR}/builds/nightly/" />
+	
+	<copy todir="${env.PUBLISH_DIR}/doc/OpenClinica/">
+	<fileset dir="${doc.dir}">
+	<include name="**/*"/>
+	</fileset>
+	</copy>
+	
+	<copy todir="${env.PUBLISH_DIR}/junit/OpenClinica/">
+	
+	<fileset dir="${test.dir}">
+	<include name="*"/>
+	</fileset>
+	<fileset dir="${test.dir}/html"/>
+	</copy>
+	
+	<copy todir="${env.PUBLISH_DIR}/coverage">
+		<fileset dir="${coverage.webapp}">
+		<include name="*"/>
+		</fileset>
+		<fileset dir="${coverage.webapp}"/>
+	</copy>
+		
+	</target>
+
+	<!-- *******************unpublish**************************************************** -->
+	<target name="unpublish" depends="init" description="Removes generated documentation, binaries and reports on web accessible directory.">
+	<delete dir="${env.PUBLISH_DIR}/doc/OpenClinica/" failonerror="false" />
+	<delete dir="${env.PUBLISH_DIR}/junit/OpenClinica/" failonerror="false" />
+	<delete file="${dist.dir}/${dist.name}.tar" failonerror="false" />
+	</target>
+
+
+	<target name="coverage" depends="compile" description="Test coverage code">
+		<property name="emma.enabled" value="true" />
+		<property name='emma.dir' value='lib/' />
+		<property name='coverage.out.file' value='${coverage.webapp}/coverage.ec' />
+		
+		<path id="emma.lib" >
+	    <fileset dir='${emma.dir}' includes='lib/*.jar' />
+				<pathelement location="${emma.dir}/emma.jar" />
+				<pathelement location="${emma.dir}/emma_ant.jar" />
+		</path>
+		<taskdef resource="emma_ant.properties" classpathref="emma.lib" />	
+	
+		<echo message="CATALINA HOME: ${env.CATALINA_HOME}" />	
+		<echo message="JUNIT CLASS PATH: ${java.class.path}" />			
+		
+    <emma>
+      <property name="verbosity.level" value="verbose" />
+			<instr instrpath="${build.dest}" 
+      		destdir="${instrument.dir}" 
+				metadatafile="${coverage.webapp}/coverage.em" 
+				merge="true"/>
+				
+			<merge outfile="${coverage.webapp}/coverage.es" >
+				<fileset dir="${coverage.webapp}" includes="*.em, *.ec" />
+			</merge>
+    </emma>
+		<!--cp classes/org/akaza/openclinica/dao/core/DAOInterface.class instrument/org/akaza/openclinica/dao/core/-->
+		<copy file="${build.dir}/classes/org/akaza/openclinica/dao/core/DAOInterface.class" todir="${build.dir}/instrument/org/akaza/openclinica/dao/core/"/>
+	</target>
+
+	
+	<!-- ************creates the war file*************************************** -->
+	<target name="coverage-war" depends="package,coverage" description="Creates the war file.">
+		<!-- Create a webapp dir in build dir. This enables filtering. -->
+		<mkdir dir="${coverage.webapp}"/>
+  	
+		<jar jarfile="${lib.dir}/${name}.jar"
+			basedir="${instrument.dir}"
+			manifest="${lib.dir}/manifest"
+			includes="org/**"/>
+
+		<!-- Update the WEB-INF/lib directory. -->
+		<copy todir="${webapp.dir}/WEB-INF/lib" file="${lib.dir}/${name}.jar" overwrite="true" />
+		  		
+		<war warfile="${lib.dir}/${name}.war" webxml="${webapp.dir}/WEB-INF/web.xml">
+			<fileset dir="${webapp.dir}">
+				<exclude name="WEB-INF/**"/>
+			</fileset>
+			<webinf dir="${webapp.dir}/WEB-INF" >
+				<exclude name="web.xml"/>
+			</webinf>
+		</war>
+	</target>
+
+  <!-- ************genarate coverage report*************************************** -->
+	<target name="coverage-junit" depends="coverage-war" description="Creates the coverage report">
+		<emma>
+			<property name='coverage.out.file' value='${coverage.webapp}/coverage.ec' />
+		</emma>
+		<!-- Run the tests, which are all classes whose name starts with 'Test'. -->
+		<junit printsummary="on">
+			<sysproperty key="catalina_home"  value="${env.CATALINA_HOME}" />
+			<sysproperty key="test_host"  value="${env.TEST_HOST}" />
+			<classpath path="${instrument.dir};${java.class.path}" />	
+			<jvmarg value="-Demma.coverage.out.file=${coverage.webapp}/coverage.ec" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+			<formatter type="xml" />	
+			<batchtest todir="${test.dir}">
+				<fileset dir="${src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>		
+		</junit>
+		<!-- this is a problem.. for some reason -Demma.coverage.out.file is not being set-->
+		<copy file="/home/tomcat/coverage.ec" todir="${coverage.webapp}/"/>
+	</target>
+	
+  <!-- ************genarate coverage report*************************************** -->
+	<target name="coverage-report" depends="coverage-junit" description="Creates the coverage report">
+		<emma>
+      <property name="verbosity.level" value="verbose" />				
+      <property name="report.html.out.encoding" value="UTF-8" />	
+
+	  		<!-- uncomment once report is generated -->
+			<report sourcepath="${build.src}" encoding="UTF-8" sort="+block,+name,+method,+class" depth="all" metrics="method:70,block:80,line:80,class:100" >
+				<infileset dir="${coverage.webapp}" includes="*.em, *.ec, *.es" />
+				<txt outfile="${coverage.webapp}/coverage.txt" depth="package" columns="class,method,block,line,name"/>
+				<xml outfile="${coverage.webapp}/coverage.xml" depth="package"/>
+				<html outfile="${coverage.webapp}/coverage.html" depth="method" columns="name,class,method,block,line"/>  	    	
+			</report>
+		</emma>
+	</target>
+	
+</project>

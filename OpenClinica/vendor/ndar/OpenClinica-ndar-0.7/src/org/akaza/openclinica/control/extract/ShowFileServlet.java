@@ -1,0 +1,95 @@
+/*
+ * Created on Jun 9, 2005
+ *
+ * 
+ */
+package org.akaza.openclinica.control.extract;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.akaza.openclinica.bean.core.Role;
+import org.akaza.openclinica.bean.extract.ArchivedDatasetFileBean;
+import org.akaza.openclinica.bean.extract.ArchivedDatasetFileRow;
+import org.akaza.openclinica.bean.extract.DatasetBean;
+import org.akaza.openclinica.control.core.SecureController;
+import org.akaza.openclinica.core.EntityBeanTable;
+import org.akaza.openclinica.core.form.FormProcessor;
+import org.akaza.openclinica.dao.extract.ArchivedDatasetFileDAO;
+import org.akaza.openclinica.dao.extract.DatasetDAO;
+import org.akaza.openclinica.exception.InsufficientPermissionException;
+import org.akaza.openclinica.view.Page;
+
+/**
+ * <P>purpose of this servlet is to respond with a file listing after
+ * we've outlasted the 'please wait' message.
+ * 
+ * @author thickerson
+ * 
+ */
+public class ShowFileServlet extends SecureController {
+	public static String getLink(int fId, int dId) {
+		return "ShowFile?fileId=" + fId + "&datasetId=" + dId;
+	}
+
+	public void processRequest() throws Exception {
+		FormProcessor fp = new FormProcessor(request);
+    	int fileId = fp.getInt("fileId");
+    	int dsId = fp.getInt("datasetId");
+    	DatasetDAO dsdao = new DatasetDAO(sm.getDataSource());
+    	DatasetBean db = (DatasetBean)dsdao.findByPK(dsId);
+    	
+    	ArchivedDatasetFileDAO asdfdao = 
+    		new ArchivedDatasetFileDAO(sm.getDataSource());
+    	ArchivedDatasetFileBean asdfBean = 
+    		(ArchivedDatasetFileBean)asdfdao.findByPK(fileId);
+
+    	ArrayList newFileList = new ArrayList();
+		newFileList.add(asdfBean);
+		//request.setAttribute("filelist",newFileList);
+    	
+    	ArrayList filterRows = 
+    		ArchivedDatasetFileRow.generateRowsFromBeans(newFileList);
+    	EntityBeanTable table = fp.getEntityBeanTable();
+		String[] columns = { "File Name", "Run Time", "File Size", "Created Date", "Created By" };
+		table.setColumns(new ArrayList(Arrays.asList(columns)));
+		table.hideColumnLink(0);
+		table.hideColumnLink(1);
+		table.hideColumnLink(2);
+		table.hideColumnLink(3);
+		table.hideColumnLink(4);
+		
+		//table.setQuery("ExportDataset?datasetId=" +db.getId(), new HashMap());
+		//trying to continue...
+		//session.setAttribute("newDataset",db);
+		request.setAttribute("dataset", db);
+		request.setAttribute("file",asdfBean);
+		table.setRows(filterRows);
+		table.computeDisplay();
+		
+		request.setAttribute("table", table);
+    	Page finalTarget = Page.EXPORT_DATA_CUSTOM.cloneWithNewFileName(
+    	    "/WEB-INF/jsp/extract/generateMetadataFile.jsp");
+    	
+    	
+    	forwardPage(finalTarget);
+	}
+	
+	public void mayProceed() throws InsufficientPermissionException {
+	  	if (ub.isSysAdmin()) {
+	  		return ;
+	  	}
+	  	if (currentRole.getRole().equals(Role.STUDYDIRECTOR)
+	  	        || currentRole.getRole().equals(Role.COORDINATOR)
+				|| currentRole.getRole().equals(Role.INVESTIGATOR)) {
+	  	      return;
+	  	}
+
+	  	addPageMessage("You don't have the correct privilege in your current active study. "
+	  	        + "Please change your active study or contact your sysadmin.");
+	  	throw new InsufficientPermissionException(Page.MENU, "not allowed to access extract data servlet", "1");
+
+		
+	}
+
+}

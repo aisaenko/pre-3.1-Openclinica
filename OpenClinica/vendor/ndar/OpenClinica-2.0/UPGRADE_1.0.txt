@@ -1,0 +1,82 @@
+1.	Upgrading OpenClinica
+-----------------------------------
+1.1.	Introduction
+-----------------------------------
+The subject here is to upgrade the version of Openclinica. The following procedure is generic and might vary, based on your environment. 
+Nevertheless, we advise you to adapt the information given with the commands to your own environment.
+The example used in this document is an upgrade from the version 0.9.2. to the version 1.0.
+
+1.2.	Preparation
+----------------------------------
+We will assume the following:
+
+- You already have installed Openclinica.
+Therefore you already have created a Postgres database (8.0.x), installed Java (J2SDK 1.4.1x), installed Tomcat (5.0.x), and created the users ‘tomcat’ and ‘postgres’.
+
+- You un-tarred the tar file in the tomcat home directory:
+/home/tomcat/OpenClinica/ 
+
+- Your working directory is:
+		/usr/share/tomcat/
+
+1.3.	Instructions
+----------------------------------
+Summary of actions:
+  For the upgrade, do the following:
+- Save the proper files in production and then replace them with the new ones.
+- Restart the application.
+- Apply the patch and the triggers on the database.
+- Modify the property files.
+
+1.4 Detailed Instructions
+---------------------------------
+Log on your server as tomcat.
+
+Save the production property files:
+
+my.server.org ~> cd /usr/share/tomcat/webapps/OpenClinica 
+my.server.org ~> cp -R ./properties /home/tomcat/old_properties
+
+Keep in mind that the whole directory /usr/share/tomcat/webapps/OpenClinica will be recreated by the tomcat server as soon as the new file ‘.war’ will be placed in the webapps folder.  Note that this will not remove any CRF files or archived datasets, as they are stored in a seperate directory on your machine.
+
+Save the production '.war' file and replace it with the new OpenClinica.war:
+
+my.server.org ~> cd /usr/share/tomcat/webapps/
+my.server.org ~> cp OpenClinica.war old_OpenClinica.war
+my.server.org ~> cd /home/tomcat/OpenClinica/lib/
+my.server.org ~> cp OpenClinica.war /usr/share/tomcat/webapps/
+
+Then restart the application: 
+my.server.org ~> cd /usr/share/tomcat/bin/ 
+my.server.org ~> ./shutdown.sh
+my.server.org ~> ./startup.sh
+
+Log on as postgres user: 
+my.server.org ~> su - postgres
+
+Apply the last patch ('0.9.2') for the 'openclinica' database:
+
+[PostgreSQL]$ cd /home/tomcat/OpenClinica/database/PostgreSQL
+
+There you will find the patch files. 
+They should have the version number in their own name.
+Here is an example of how to apply the patches:
+
+[PostgreSQL]$ psql -d openclinica -f ./schema_patch_1.0.sql
+
+[PostgreSQL]$ cd /home/tomcat/OpenClinica/conf
+[PostgreSQL]$ psql -d openclinica -f ./pg_trigger_*.sql
+[PostgreSQL]$ psql -d openclinica -f ./pg_data_warehouse.sql
+
+Modify the 3 property files::
+
+my.server.org ~> cd /usr/share/tomcat/webapps/OpenClinica/properties
+
+Lets grab the 'old_properties' files and copy them into the new directory:
+
+my.server.org ~> cp /home/tomcat/old_properties/datainfo.properties ./
+my.server.org ~> cp /home/tomcat/old_properties/facilityinfo.properties ./ 
+
+Depending on your configuration, add or modify this line in  'datainfo.properties':
+	change_passwd_required=0
+

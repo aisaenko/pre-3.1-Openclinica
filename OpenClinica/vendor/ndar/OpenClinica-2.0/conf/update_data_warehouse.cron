@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+
+/usr/local/pgsql/bin/psql -U clinica -d openclinica -f /var/OpenClinica-1.0/conf/pg_data_warehouse.sql

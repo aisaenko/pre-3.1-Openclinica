@@ -1,0 +1,38 @@
+@@ -1153,6 +1153,13 @@
+ 			org.akaza.openclinica.control.submit.AssessmentInfoServlet
+ 		</servlet-class>
+ 	</servlet>
++	<servlet>
++		<servlet-name>DataImportingServlet</servlet-name>
++		<display-name>DataImporting</display-name>
++		<servlet-class>
++			org.akaza.openclinica.control.techadmin.DataImportingServlet
++		</servlet-class>
++	</servlet>
+ 
+ 	<servlet-mapping>
+ 		<servlet-name>MainMenuServlet</servlet-name>
+@@ -1762,6 +1769,10 @@
+ 		<servlet-name>AssessmentInfoServlet</servlet-name>
+ 		<url-pattern>/AssessmentInfo</url-pattern>
+ 	</servlet-mapping>
++	<servlet-mapping>
++		<servlet-name>DataImportingServlet</servlet-name>
++		<url-pattern>/DataImporting</url-pattern>
++	</servlet-mapping>
+ 
+ 	<resource-ref>
+ 		<description>Postgres Datasource example</description>
+@@ -2637,6 +2648,12 @@
+ 			</web-resource-name>
+ 			<url-pattern>/AssessmentInfo</url-pattern>
+ 		</web-resource-collection>
++		<web-resource-collection>
++			<web-resource-name>
++				OpenClinica Data Importing
++			</web-resource-name>
++			<url-pattern>/DataImporting</url-pattern>
++		</web-resource-collection>
+ 		<auth-constraint>
+ 			<role-name>tomcat</role-name>
+ 			<role-name>admin</role-name>

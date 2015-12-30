@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM study_template WHERE 
+		study_template_id = ?</sql>
+	</query>
+	<query>
+		<name>findAllByPK</name>
+		<sql>SELECT stmp.*, st.name as study_name, stt.name as type_name 
+			FROM study_template stmp, study st, study_template_type stt 
+			WHERE stmp.study_template_type_id= stt.study_template_type_id
+			AND stmp.study_id= st.study_id
+		    AND study_template_id = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM study_template</sql>
+	</query>
+	<query>
+		<name>findAllByStudy</name>
+		<sql>
+			SELECT stmp.*, st.name as study_name, stt.name as type_name 
+			FROM study_template stmp, study st, study_template_type stt
+			WHERE stmp.study_template_type_id=stt.study_template_type_id
+			AND stmp.study_id=st.study_id
+			AND (st.study_id=? or st.parent_study_id=?)
+		    ORDER BY stmp.name asc
+		</sql>
+	</query>
+	<query>
+		<name>findAllActiveByStudy</name>
+		<sql>
+			SELECT stmp.*, st.name as study_name, stt.name as type_name 
+			FROM study_template stmp, study st, study_template_type stt
+			WHERE stmp.study_template_type_id=stt.study_template_type_id
+			AND stmp.study_id=st.study_id
+				AND (st.study_id=? or st.parent_study_id=?)		
+			AND stmp.status_id=1
+			ORDER BY stmp.name asc
+		</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO study_template 
+		   (STUDY_TEMPLATE_ID,NAME,STUDY_ID,OWNER_ID,DATE_CREATED, study_template_type_id,
+		    STATUS_ID,subject_assignment) 
+		   VALUES (?,?,?,?,SYSDATE,?,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE study_template SET NAME=?,STUDY_ID=?, study_template_type_id=?,
+		  STATUS_ID=?, DATE_UPDATED=?,UPDATE_ID=?,subject_assignment=?
+		  WHERE study_template_ID=?
+	    </sql>
+	</query>
+	<query>
+		<name>getCurrentPrimaryKey</name>
+		<sql>SELECT study_template_seq.currval AS key FROM DUAL</sql>
+	</query>
+	<query>
+		<name>getNextPrimaryKey</name>
+		<sql>SELECT study_template_seq.nextval AS key FROM DUAL</sql>
+	</query>
+</queries>

@@ -1,0 +1,240 @@
+/*
+ * OpenClinica is distributed under the
+ * GNU Lesser General Public License (GNU LGPL).
+
+ * For details see: http://www.openclinica.org/license
+ * copyright 2003-2005 Akaza Research
+ */
+package org.akaza.openclinica.dao.submit;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.sql.DataSource;
+
+import org.akaza.openclinica.bean.core.EntityBean;
+import org.akaza.openclinica.bean.submit.*;
+import org.akaza.openclinica.dao.core.*;
+import org.akaza.openclinica.bean.core.Status;
+
+/**
+ * <P>
+ * ItemDataDAO.java, the equivalent to AnswerDAO in the original code base.
+ * 
+ * @author thickerson
+ * 
+ *  
+ */
+public class ItemDataDAO extends AuditableEntityDAO {
+
+  /**
+   * Do not use!!  Not finished yet
+   * @return
+   */
+/*  public Collection findMinMaxDates() {
+    ArrayList al = new ArrayList();
+    ArrayList alist = this.select(digester.getQuery("findMinMaxDates"));
+    //al =
+    return al;
+  }*/
+
+  // private DAODigester digester;
+
+  private void setQueryNames() {
+    getCurrentPKName = "getCurrentPK";
+    getNextPKName = "getNextPK";
+  }
+
+  public ItemDataDAO(DataSource ds) {
+    super(ds);
+    setQueryNames();
+  }
+
+  public ItemDataDAO(DataSource ds, DAODigester digester) {
+    super(ds);
+    this.digester = digester;
+    setQueryNames();
+  }
+
+  protected void setDigesterName() {
+    digesterName = SQLFactory.getInstance().DAO_ITEMDATA;
+  }
+
+  public void setTypesExpected() {
+    this.unsetTypeExpected();
+    this.setTypeExpected(1, TypeNames.INT);
+    this.setTypeExpected(2, TypeNames.INT);
+    this.setTypeExpected(3, TypeNames.INT);
+    this.setTypeExpected(4, TypeNames.INT);
+    this.setTypeExpected(5, TypeNames.STRING);
+    this.setTypeExpected(6, TypeNames.DATE);
+    this.setTypeExpected(7, TypeNames.DATE);
+    this.setTypeExpected(8, TypeNames.INT);//owner id
+    this.setTypeExpected(9, TypeNames.INT);//update id
+  }
+
+  public EntityBean update(EntityBean eb) {
+    ItemDataBean idb = (ItemDataBean) eb;
+
+    idb.setActive(false);
+
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(idb.getEventCRFId()));
+    variables.put(new Integer(2), new Integer(idb.getItemId()));
+    variables.put(new Integer(3), new Integer(idb.getStatus().getId()));
+    variables.put(new Integer(4), idb.getValue());
+    variables.put(new Integer(5), new Integer(idb.getUpdaterId()));
+    variables.put(new Integer(6), new Integer(idb.getId()));
+    this.execute(digester.getQuery("update"), variables);
+
+    if (isQuerySuccessful()) {
+      idb.setActive(true);
+    }
+
+    return idb;
+  }
+
+  public EntityBean create(EntityBean eb) {
+    ItemDataBean idb = (ItemDataBean) eb;
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    int id=getNextPK();
+    variables.put(new Integer(1), new Integer(id));
+    variables.put(new Integer(2), new Integer(idb.getEventCRFId()));
+    variables.put(new Integer(3), new Integer(idb.getItemId()));
+    variables.put(new Integer(4), new Integer(idb.getStatus().getId()));
+    variables.put(new Integer(5), idb.getValue());
+    variables.put(new Integer(6), new Integer(idb.getOwnerId()));
+    this.execute(digester.getQuery("create"), variables);
+
+    if (isQuerySuccessful()) {
+      idb.setId(id);
+    }
+
+    return idb;
+  }
+
+  public Object getEntityFromHashMap(HashMap hm) {
+    ItemDataBean eb = new ItemDataBean();
+    this.setEntityAuditInformation(eb, hm);
+    eb.setId(((Integer) hm.get("item_data_id")).intValue());
+    eb.setEventCRFId(((Integer) hm.get("event_crf_id")).intValue());
+    eb.setItemId(((Integer) hm.get("item_id")).intValue());
+    eb.setValue((String) hm.get("value"));
+    eb.setStatus(Status.get(((Integer) hm.get("status_id")).intValue()));
+    return eb;
+  }
+
+  public Collection<ItemDataBean> findAll() {
+    setTypesExpected();
+
+    ArrayList alist = this.select(digester.getQuery("findAll"));
+    Collection<ItemDataBean> al = new ArrayList<ItemDataBean>();
+    Iterator it = alist.iterator();
+    while (it.hasNext()) {
+      ItemDataBean eb = (ItemDataBean) this.getEntityFromHashMap((HashMap) it.next());
+      al.add(eb);
+    }
+    return al;
+  }
+
+  public Collection findAll(String strOrderByColumn, boolean blnAscendingSort,
+      String strSearchPhrase) {
+    ArrayList al = new ArrayList();
+
+    return al;
+  }
+
+  public EntityBean findByPK(int ID) {
+    ItemDataBean eb = new ItemDataBean();
+    this.setTypesExpected();
+
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(ID));
+
+    String sql = digester.getQuery("findByPK");
+    ArrayList alist = this.select(sql, variables);
+    Iterator it = alist.iterator();
+
+    if (it.hasNext()) {
+      eb = (ItemDataBean) this.getEntityFromHashMap((HashMap) it.next());
+    }
+    return eb;
+  }
+
+  public void delete(int itemId) {
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(itemId));
+
+    this.execute(digester.getQuery("delete"), variables);
+    return;
+
+  }
+
+  public Collection findAllByPermission(Object objCurrentUser, int intActionType,
+      String strOrderByColumn, boolean blnAscendingSort, String strSearchPhrase) {
+    ArrayList al = new ArrayList();
+
+    return al;
+  }
+
+  public Collection findAllByPermission(Object objCurrentUser, int intActionType) {
+    ArrayList al = new ArrayList();
+
+    return al;
+  }
+
+  public ArrayList findAllBySectionIdAndEventCRFId(int sectionId, int eventCRFId) {
+    setTypesExpected();
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(sectionId));
+    variables.put(new Integer(2), new Integer(eventCRFId));
+
+    return this.executeFindAllQuery("findAllBySectionIdAndEventCRFId", variables);
+  }
+
+  public ArrayList<ItemDataBean> findAllByEventCRFId(int eventCRFId) {
+    setTypesExpected();
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(eventCRFId));
+
+    return (ArrayList<ItemDataBean>)this.executeFindAllQuery("findAllByEventCRFId", variables);
+  }
+
+  public ArrayList findAllBlankRequiredByEventCRFId(int eventCRFId, int crfVersionId) {
+    setTypesExpected();
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(eventCRFId));
+    variables.put(new Integer(2), new Integer(crfVersionId));
+
+    return this.executeFindAllQuery("findAllBlankRequiredByEventCRFId", variables);
+  }
+
+  public void updateStatusByEventCRF(EventCRFBean eventCRF, Status s) {
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(s.getId()));
+    variables.put(new Integer(2), new Integer(eventCRF.getId()));
+
+    String sql = digester.getQuery("updateStatusByEventCRF");
+    execute(sql, variables);
+
+    return;
+  }
+
+  public ItemDataBean findByItemIdAndEventCRFId(int itemId, int eventCRFId) {
+    setTypesExpected();
+
+    HashMap<Integer, Object> variables = new HashMap<Integer, Object>();
+    variables.put(new Integer(1), new Integer(itemId));
+    variables.put(new Integer(2), new Integer(eventCRFId));
+
+    EntityBean eb = this.executeFindByPKQuery("findByItemIdAndEventCRFId", variables);
+
+    if (!eb.isActive()) {
+      return new ItemDataBean();
+    }
+    return (ItemDataBean) eb;
+  }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO PUBLISHER (PUBLISHER_ID, NAME, ABBREVIATION, DESCRIPTION) VALUES (?,?,?,?)</sql>
+	</query>
+	<query>
+		<name>getPublisherIDByName</name>
+		<sql>SELECT PUBLISHER_ID FROM PUBLISHER WHERE NAME=?</sql>
+	</query>
+</queries>

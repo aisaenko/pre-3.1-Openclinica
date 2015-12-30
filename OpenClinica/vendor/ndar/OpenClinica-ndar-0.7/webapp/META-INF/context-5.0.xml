@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+
+    Context configuration file for the Tomcat Administration Web App
+
+-->
+
+<!-- MODIFY THIS FILE AS NEEDED -->
+<Context docBase="OpenClinica">
+
+<!-- Linux Context Path -->
+<!-- moved to web.xml
+	<Parameter name="propertiesDir" value="/usr/share/tomcat/webapps/OpenClinica/properties/" override="true"/>
+-->
+
+<!-- Windows Context Path -->
+<!-- removed
+	<Parameter name="propertiesDir" value="c:\\tomcat5\\webapps\\OpenClinica\\properties" override="true"/>
+-->	
+
+<!-- removed
+ 	<Parameter name="datasetHomeDir" value="OpenClinica" override="false"/>
+-->
+<!-- Use for Postgres
+	<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99" driverName="org.postgresql.Driver" digest="MD5"
+			connectionURL="jdbc:postgresql://localhost:5432/openclinica" connectionName="clinica" connectionPassword="clinica" userTable="user_account"
+			userNameCol="user_name" userCredCol="passwd" userRoleTable="study_user_role" roleNameCol="role_name"/>
+-->
+<!-- Use for Oracle -->
+	<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99" driverName="oracle.jdbc.driver.OracleDriver" digest="MD5"
+			connectionURL="jdbc:oracle:thin:@localhost:1521:openclinica" connectionName="clinica" connectionPassword="clinica" userTable="user_account"
+			userNameCol="user_name" userCredCol="passwd" userRoleTable="study_user_role" roleNameCol="role_name"/>
+<!-- moved to web.xml
+ 	<Resource name="SQLPostgres" scope="Shareable" auth="Container" type="javax.sql.DataSource"/>
+-->
+
+	<Logger className="org.apache.catalina.logger.FileLogger" prefix="openclinica_log_1.0."
+			suffix=".txt" timestamp="true"/>
+<!-- duplicate (original moved to web.xml)
+ 	<Resource name="SQLPostgres" scope="Shareable" auth="Container"
+			type="javax.sql.DataSource"/>
+-->
+	<ResourceParams name="SQLPostgres">
+		<parameter>
+			<name>url</name>
+			<value>jdbc:postgresql://localhost:5432/openclinica</value>
+		</parameter>
+		<parameter>
+			<name>driverClassName</name>
+			<value>org.postgresql.Driver</value>
+		</parameter>
+		<parameter>
+			<name>username</name>
+			<value>clinica</value>
+		</parameter>
+		<parameter>
+			<name>password</name>
+			<value>clinica</value>
+		</parameter>
+		<parameter>
+			<name>maxActive</name>
+			<value>50</value>
+		</parameter>
+		<parameter>
+			<name>maxWait</name>
+			<value>-1</value>
+		</parameter>
+		<parameter>
+			<name>maxIdle</name>
+			<value>10</value>
+		</parameter>
+	</ResourceParams>
+
+	<ResourceParams name="SQLOracle">
+		<parameter>
+			<name>type</name>
+			<value>javax.sql.DataSource</value>
+		</parameter>
+		<parameter>
+			<name>factory</name>
+			<value>org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory</value>
+		</parameter>
+		<parameter>
+			<name>url</name>
+			<value>jdbc:oracle:thin:@localhost:1521:openclinica</value>
+		</parameter>
+		<parameter>
+			<name>driverClassName</name>
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</parameter>
+		<parameter>
+			<name>username</name>
+			<value>clinica</value>
+		</parameter>
+		<parameter>
+			<name>password</name>
+			<value>clinica</value>
+		</parameter>
+		<parameter>
+			<name>maxActive</name>
+			<value>100</value>
+		</parameter>
+		<parameter>
+			<name>maxWait</name>
+			<value>10000</value>
+		</parameter>
+		<parameter>
+			<name>maxIdle</name>
+			<value>30</value>
+		</parameter>
+	</ResourceParams>
+</Context>

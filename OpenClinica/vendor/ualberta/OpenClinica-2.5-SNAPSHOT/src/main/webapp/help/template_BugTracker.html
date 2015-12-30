@@ -1,0 +1,173 @@
+<html>
+
+<head>
+
+<title>OpenClinica Bug Tracker</title>
+
+<link rel="stylesheet" href="includes/styles.css" type="text/css">
+
+<style type="text/css">
+
+.popup_BG { background-image: url(images/main_BG.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	background-color: #FFFFFF;
+	}
+
+.formfieldXXL { font-family: Tahoma Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #333333;
+	background-color: #FFFFFF;
+	border-width: 0px;
+	width: 300px;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-left: 1px;
+	margin-right: 6px;
+	margin-top: 1px;
+	margin-bottom: 7px; 
+	}
+
+.formfieldXXL_BG { background-image: url(images/formfieldXXL_BG.gif);
+	background-repeat: no-repeat;
+	width: 307px;
+	height: 26px;
+	margin-bottom: 6px; 
+	}
+
+.formtextareaXXL10 { font-family: Tahoma Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #333333;
+	background-color: #FFFFFF;
+	border-width: 0px;
+	width: 300px;
+	height: 144px;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-left: 1px;
+	margin-right: 6px;
+	margin-top: 1px;
+	margin-bottom: 7px; 
+	}
+
+.formtextareaXXL10_BG { background-image: url(images/formtextareaXXL10_BG.gif);
+	background-repeat: no-repeat;
+	width: 307px;
+	height: 152px;
+	margin-bottom: 6px; 
+	}
+
+</style>
+
+<script language="JavaScript" src="includes/global_functions_javascript.js"></script>
+
+</head>
+
+<body class="popup_BG" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+   <tr>
+	<td valign="top">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	   <tr>
+		<td background="images/popup_BG.gif"><img src="images/popup_OC.gif"></td>
+		<td background="images/popup_BG.gif" align="right"><img src="images/popup_BugTracker.gif"></td>
+	   </tr>
+	   <tr>
+		<td colspan="2" style="padding-top: 18px; padding-left: 45px; padding-right: 45px; padding-bottom: 30px;">
+
+<!-- Main Content Area -->
+
+<h1><span class="title_submit">
+Submit Bug
+</span></h1>
+
+
+
+<!-- Alert Box -->
+
+
+
+
+<P>* indicates required field.</P>
+<form action="bug.php" method="post" name=bugform>
+<input type="hidden" name="submitted" value="1" />
+
+<table border="0" cellpadding="3">
+
+	<tr valign="top">
+		<td class="formlabel">URL :</td>
+		<td>
+		<div class="formfieldXXL_BG">
+			<input class="formfieldXXL" type="text" name="url" size="50" value=http://192.168.1.103:8080/OpenClinica-dev/MainMenu >
+		</div>
+		<input type="hidden" name="user"  value= > 
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<td class="formlabel">Subject * :</td>
+		<td>
+		<div class="formfieldXXL_BG">
+			<input class="formfieldXXL" type="text" name="summary" value="" size="50">
+		</div>
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<td class="formlabel">Description * :</td>
+	  	<td>
+		<div class="formtextareaXXL10_BG">
+			<textarea class="formtextareaXXL10" name="description" cols=50 rows=10></textarea>
+		</div>
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<td class="formlabel">Severity :</td>
+	  	<td>
+		<div class="formfieldS_BG">
+		<select class="formfieldS" tabindex="3" name="severity">
+			<option value="10">feature</option><option value="20">trivial</option><option value="30">text</option><option value="40">tweak</option><option value="50" selected="selected" >minor</option><option value="60">major</option><option value="70">crash</option><option value="80">block</option>		</select>
+		</div>
+	  	</td>
+	</tr>
+
+	<tr valign="top">
+		<td class="formlabel">Priority :</td>
+	  	<td>
+		<div class="formfieldS_BG">
+		<select class="formfieldS"  tabindex="4" name="priority">
+			<option value="10">none</option><option value="20">low</option><option value="30" selected="selected" >normal</option><option value="40">high</option><option value="50">urgent</option><option value="60">immediate</option>		</select>
+		</div>
+	  	</td>
+	</tr>
+
+	<tr valign="bottom">
+		<td>&nbsp;</td>
+		<td><input class="button" type="submit" name="Submit" value="Continue"></td>
+	</tr>
+
+</table>
+
+</form>
+
+<!-- End Main Content Area -->
+
+		</td>
+	   </tr>
+	</table>
+	</td>
+   </tr>
+   <tr>
+	<td valign="bottom" align="right" style="padding-right: 18px; padding-bottom: 8px">
+
+	<a href="#">Exit Bug Tracker</a>
+
+	</td>
+   </tr>
+</table>
+
+</body>
+
+</html>

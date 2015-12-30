@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+    Context configuration file for the Tomcat Administration Web App
+-->
+
+<!-- MODIFY THIS FILE AS NEEDED -->
+<Context path="/OpenClinica-2.5-SNAPSHOT-ualberta" docBase="OpenClinica-2.5-SNAPSHOT-ualberta" debug="99" reloadable="true" 
+    crossContext="true" useNaming="true">
+    <!--  <Parameter name="propertiesDir" value="C:\\tomcat5\\webapps\\OpenClinica-SNAPSHOT\\properties\\"  override="false"/> --> 
+    <Parameter name="propertiesDir" value="/usr/local/tomcat/webapps/OpenClinica-2.5-SNAPSHOT-ualberta/properties/"  override="false"/> 
+    <Parameter name="datasetHomeDir" value="OpenClinica-SNAPSHOT-ualberta"  override="false"/>
+
+<!-- Use for Postgres -->
+<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99" 
+    driverName="org.postgresql.Driver" digest="MD5" 
+connectionURL="jdbc:postgresql://localhost:5432/OpenClinica-2.5-SNAPSHOT-ualberta"
+connectionName="clinica" connectionPassword="clinica" userTable="user_account" 
+userNameCol="user_name" userCredCol="passwd" 
+userRoleTable="study_user_role" roleNameCol="role_name"/>
+
+<Resource name="SQLPostgres" auth="Container" 
+	type="javax.sql.DataSource" factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+	username="clinica"
+    password="clinica"
+	driverClassName="org.postgresql.Driver"
+    url="jdbc:postgresql://localhost:5432//OpenClinica-2.5-SNAPSHOT-ualberta" 	 
+	maxActive="100" 
+	maxIdle="30" 
+	maxWait="10000"/>
+
+<!-- Use for Oracle 
+<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99" 
+				driverName="oracle.jdbc.driver.OracleDriver" digest="MD5" 
+connectionURL="jdbc:oracle:thin:@localhost:1521:openclinica"
+connectionName="clinica" connectionPassword="clinica" userTable="user_account" 
+userNameCol="user_name" userCredCol="passwd" 
+userRoleTable="study_user_role" roleNameCol="role_name"/>
+<Logger className="org.apache.catalina.logger.FileLogger" prefix="openclinica_log_1.0." 
+	suffix=".txt" timestamp="true"/>
+	
+<Resource name="SQLOracle" auth="Container" 
+	type="javax.sql.DataSource" factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
+	username="clinica"
+    password="clinica"
+	driverClassName="oracle.jdbc.driver.OracleDriver"
+    url="jdbc:oracle:thin:@192.168.15.70:1521:OpenClinica-2.0.x" 	 
+	maxActive="100" 
+	maxIdle="30" 
+	maxWait="10000"/>
+-->
+
+</Context>
