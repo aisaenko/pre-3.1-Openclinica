@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM study_group WHERE 
+		study_group_id = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM study_group</sql>
+	</query>
+	<query>
+		<name>findAllByStudy</name>
+		<sql>SELECT * FROM study_group WHERE study_id=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO study_group 
+		   (NAME,STUDY_ID,OWNER_ID,DATE_CREATED, GROUP_TYPE_ID,
+		    STATUS_ID) 
+		   VALUES (?,?,?,SYSDATE,?,?)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE study_group SET NAME=?,STUDY_ID=?, GROUP_TYPE_ID=?,
+		  STATUS_ID=?, DATE_UPDATED=?,UPDATE_ID=? WHERE STUDY_GROUP_ID=?
+	    </sql>
+	</query>
+	<query>
+		<name>findByPKAndStudy</name>
+		<sql>SELECT * FROM study_group WHERE study_group_id=? AND study_id=?</sql>
+	</query>
+</queries>

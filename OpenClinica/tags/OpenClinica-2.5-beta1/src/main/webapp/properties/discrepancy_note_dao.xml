@@ -1,0 +1,475 @@
+<?xml version="1.0"?>
+<queries>
+    <query>
+        <name>findByPK</name>
+        <sql>SELECT * FROM discrepancy_note WHERE
+            discrepancy_note_id = ?</sql>
+    </query>
+    <query>
+        <name>findAll</name>
+        <sql>SELECT * FROM discrepancy_note</sql>
+    </query>
+    <query>
+        <name>findAllParentsByStudy</name>
+        <sql>
+            SELECT *
+            FROM discrepancy_note
+            WHERE ((parent_dn_id IS NULL) or (parent_dn_id = 0))
+            AND (study_id = ?
+            OR study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+        </sql>
+    </query>
+    <query>
+        <name>findAllByStudyAndParent</name>
+        <sql>
+            SELECT *
+            FROM discrepancy_note
+            WHERE parent_dn_id = ?
+            AND (study_id = ?
+            OR study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+        </sql>
+    </query>
+    <query>
+        <name>findAllSubjectByStudy</name>
+        <sql>
+            SELECT dn.*, ss.label,dsm.column_name,dsm.subject_id
+            FROM discrepancy_note dn, dn_subject_map dsm,
+            study_subject ss, subject sub
+            WHERE (dn.study_id = ?
+            OR dn.study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.subject_id = sub.subject_id
+            AND ss.study_id = ?
+            AND ss.subject_id = sub.subject_id
+            AND ((dn.parent_dn_id IS NULL) or (dn.parent_dn_id = 0))
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllStudyEventByStudy</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            dsm.column_name, dsm.study_event_id
+            FROM discrepancy_note dn, dn_study_event_map dsm ,
+            study_event se,
+            study_event_definition sed,
+            study_subject ss
+            WHERE (dn.study_id = ?
+            OR dn.study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_event_id =se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ((dn.parent_dn_id IS NULL) or (dn.parent_dn_id = 0))
+        </sql>
+    </query>
+    <query>
+        <name>findAllStudySubjectByStudy</name>
+        <sql>
+            SELECT dn.*, ss.label,dsm.column_name, dsm.study_subject_id
+            FROM discrepancy_note dn, dn_study_subject_map dsm ,
+            study_subject ss
+            WHERE (dn.study_id = ?
+            OR dn.study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_subject_id = ss.study_subject_id
+            AND ((dn.parent_dn_id IS NULL) or (dn.parent_dn_id = 0))
+        </sql>
+    </query>
+    <query>
+        <name>findAllEventCRFByStudy</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name, dsm.column_name,dsm.event_crf_id
+            FROM discrepancy_note dn, dn_event_crf_map dsm ,
+            event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf
+            WHERE (dn.study_id = ?
+            OR dn.study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND ec.event_crf_id = dsm.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            AND ((dn.parent_dn_id IS NULL) or (dn.parent_dn_id = 0))
+        </sql>
+    </query>
+    <query>
+        <name>findAllItemDataByStudy</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name, it.name as item_name, id.value, it.item_id, dsm.item_data_id
+            FROM discrepancy_note dn, dn_item_data_map dsm ,
+            item_data id, item it, event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf
+            WHERE (dn.study_id = ?
+            OR dn.study_id in
+            (SELECT study_id
+            FROM study
+            WHERE parent_study_id=?))
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.item_data_id = id.item_data_id
+            AND id.item_id = it.item_id
+            AND ec.event_crf_id = id.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            AND ((dn.parent_dn_id IS NULL) or (dn.parent_dn_id = 0))
+        </sql>
+    </query>
+    <query>
+        <name>findAllEventCRFByPK</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name,dsm.column_name
+            FROM discrepancy_note dn, dn_event_crf_map dsm ,
+            event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf
+            WHERE (dn.discrepancy_note_id = ?
+            OR dn.parent_dn_id=?)
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND ec.event_crf_id = dsm.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllItemDataByPK</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name,it.name as item_name, id.value, it.item_id, dsm.item_data_id
+            FROM discrepancy_note dn, dn_item_data_map dsm ,
+            item_data id, event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf, item it
+            WHERE (dn.discrepancy_note_id = ?
+            OR dn.parent_dn_id=?)
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.item_data_id = id.item_data_id
+            AND id.item_id = it.item_id
+            AND ec.event_crf_id = id.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllStudySubjectByPK</name>
+        <sql>
+            SELECT dn.*, ss.label,dsm.column_name
+            FROM discrepancy_note dn, dn_study_subject_map dsm ,
+            study_subject ss
+            WHERE (dn.discrepancy_note_id = ?
+            OR dn.parent_dn_id=?)
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_subject_id = ss.study_subject_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllSubjectByPK</name>
+        <sql>
+            SELECT dn.*, ss.label,dsm.column_name
+            FROM discrepancy_note dn, dn_subject_map dsm ,
+            study_subject ss, subject sub
+            WHERE (dn.discrepancy_note_id = ?
+            OR dn.parent_dn_id=?)
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.subject_id = sub.subject_id
+            AND ss.subject_id = sub.subject_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllStudyEventByPK</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            dsm.column_name
+            FROM discrepancy_note dn, dn_study_event_map dsm ,
+            study_event se,
+            study_event_definition sed,
+            study_subject ss
+            WHERE (dn.discrepancy_note_id = ?
+            OR dn.parent_dn_id=?)
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_event_id =se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllBySubjectAndColumn</name>
+        <sql>
+            SELECT dn.*,ss.label
+            FROM discrepancy_note dn, dn_subject_map dsm,
+            study_subject ss, subject sub
+            where dsm.subject_id=?
+            AND dsm.column_name=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.subject_id = sub.subject_id
+            AND ss.subject_id = sub.subject_id
+            order by dn.date_created desc
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllByStudySubjectAndColumn</name>
+        <sql>
+            SELECT dn.* ,ss.label
+            FROM discrepancy_note dn, dn_study_subject_map dsm,
+            study_subject ss
+            where dsm.study_subject_id=?
+            AND dsm.column_name=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_subject_id = ss.study_subject_id
+            ORDER BY dn.date_created DESC
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllByStudyEventAndColumn</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name
+            FROM discrepancy_note dn, dn_study_event_map dsm ,
+            study_event se,
+            study_event_definition sed,
+            study_subject ss
+            where dsm.study_event_id=?
+            AND dsm.column_name=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.study_event_id =se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            order by dn.date_created desc
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllByEventCRFAndColumn</name>
+        <sql>
+            SELECT dn.*, ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name
+            FROM discrepancy_note dn, dn_event_crf_map dsm,
+            event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf
+            where dsm.event_crf_id=?
+            AND dsm.column_name=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND ec.event_crf_id = dsm.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            order by dn.date_created desc
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllByItemDataAndColumn</name>
+        <sql>
+            SELECT dn.* , ss.label, se.date_start, sed.name as sed_name,
+            crf.name as crf_name,it.name as item_name
+            FROM discrepancy_note dn, dn_item_data_map dsm,
+            item_data id, event_crf ec, study_event se,
+            study_event_definition sed, crf_version cv,
+            study_subject ss, crf, item it
+            where dsm.item_data_id=?
+            AND dsm.column_name=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.item_data_id = id.item_data_id
+            AND id.item_id = it.item_id
+            AND ec.event_crf_id = id.event_crf_id
+            AND ec.study_event_id=se.study_event_id
+            AND sed.study_event_definition_id= se.study_event_definition_id
+            AND se.study_subject_id = ss.study_subject_id
+            AND ec.crf_version_id=cv.crf_version_id
+            AND cv.crf_id = crf.crf_id
+            order by dn.date_created desc
+
+        </sql>
+    </query>
+    <query>
+        <name>findAllItemNotesByEventCRF</name>
+        <sql>
+            SELECT distinct dn.*
+            FROM discrepancy_note dn, dn_item_data_map dsm,
+            item_data id, event_crf ec
+            where ec.event_crf_id=?
+            AND dsm.column_name='value'
+            AND dn.entity_type='ItemData'
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+            AND dsm.item_data_id = id.item_data_id
+            AND ec.event_crf_id = id.event_crf_id
+            order by dn.date_created desc
+        </sql>
+    </query>
+    <query>
+        <name>findAllByParent</name>
+        <sql>
+            SELECT dn.*
+            FROM discrepancy_note dn
+            WHERE parent_dn_id=?
+            ORDER BY dn.date_created ASC
+        </sql>
+    </query>
+
+    <query>
+        <name>create</name>
+        <sql>
+            INSERT INTO discrepancy_note
+            (description, discrepancy_note_type_id ,
+            resolution_status_id ,  detailed_notes ,  date_created,
+            owner_id,  parent_dn_id, entity_type, study_id)
+            VALUES (?,?,?,?,now(),?,?, ?, ?)
+        </sql>
+    </query>
+    <query>
+        <name>createSubjectMap</name>
+        <sql>
+            INSERT INTO dn_subject_map
+            (subject_id,
+            discrepancy_note_id,
+            column_name)
+            VALUES (?,?,?)
+        </sql>
+    </query>
+    <query>
+        <name>createStudySubjectMap</name>
+        <sql>
+            INSERT INTO dn_study_subject_map
+            (study_subject_id,
+            discrepancy_note_id,
+            column_name)
+            VALUES (?,?,?)
+        </sql>
+    </query>
+    <query>
+        <name>createStudyEventMap</name>
+        <sql>
+            INSERT INTO dn_study_event_map
+            (study_event_id,
+            discrepancy_note_id,
+            column_name)
+            VALUES (?,?,?)
+        </sql>
+    </query>
+    <query>
+        <name>createEventCRFMap</name>
+        <sql>
+            INSERT INTO dn_event_crf_map
+            (event_crf_id,
+            discrepancy_note_id,
+            column_name)
+            VALUES (?,?,?)
+        </sql>
+    </query>
+    <query>
+        <name>createItemDataMap</name>
+        <sql>
+            INSERT INTO dn_item_data_map
+            (item_data_id,
+            discrepancy_note_id,
+            column_name)
+            VALUES (?,?,?)
+        </sql>
+    </query>
+    <query>
+        <name>findSubjectMapByDNId</name>
+        <sql>
+            SELECT * FROM dn_subject_map WHERE discrepancy_note_id=?
+        </sql>
+    </query>
+    <query>
+        <name>findStudySubjectMapByDNId</name>
+        <sql>
+            SELECT * FROM dn_study_subject_map WHERE discrepancy_note_id=?
+        </sql>
+    </query>
+    <query>
+        <name>findStudyEventMapByDNId</name>
+        <sql>
+            SELECT * FROM dn_study_event_map WHERE discrepancy_note_id=?
+        </sql>
+    </query>
+    <query>
+        <name>findEventCRFMapByDNId</name>
+        <sql>
+            SELECT * FROM dn_event_crf_map WHERE discrepancy_note_id=?
+        </sql>
+    </query>
+    <query>
+        <name>findItemDataMapByDNId</name>
+        <sql>
+            SELECT * FROM dn_item_data_map WHERE discrepancy_note_id=?
+        </sql>
+    </query>
+    <query>
+        <name>getCurrentPrimaryKey</name>
+        <sql>SELECT currval('discrepancy_note_discrepancy_note_id_seq') AS key</sql>
+    </query>
+    <query>
+        <name>findNumExistingNotesForItem</name>
+        <sql>
+            SELECT count(*) as num
+            FROM discrepancy_note dn, dn_item_data_map dsm
+            where dsm.item_data_id=?
+            AND dn.discrepancy_note_id=dsm.discrepancy_note_id
+        </sql>
+    </query>
+    <query>
+        <name>findItemDataDNotesFromEventCRF</name>
+        <sql>
+            SELECT dn.* FROM discrepancy_note dn, dn_item_data_map dn_idmap,
+            item_data idata, event_crf eventcrf WHERE eventcrf.event_crf_id = ?
+            AND
+            idata.event_crf_id = eventcrf.event_crf_id
+            AND idata.item_data_id =dn_idmap.item_data_id
+            AND dn_idmap.discrepancy_note_id=dn.discrepancy_note_id
+        </sql>
+    </query>
+    <query>
+        <name>findEventCRFDNotesFromEventCRF</name>
+        <sql>
+            SELECT dn.* FROM discrepancy_note dn, dn_event_crf_map eventcrf_map,
+            event_crf eventcrf WHERE eventcrf.event_crf_id = ?
+            AND
+            eventcrf.event_crf_id=eventcrf_map.event_crf_id
+            AND eventcrf_map.discrepancy_note_id=dn.discrepancy_note_id
+        </sql>
+    </query>
+</queries>

@@ -1,0 +1,20 @@
+There was an issue found with users who use OpenClinica with languages other than English.  If the user set their browser setting to es, it, or fr, and entered date values, the information would be stored incorrectly.
+
+OpenClinica comes with properties files that are used to internationalize the application. The following files had an oc_date_format_string with the wrong date format (dd/MM/yyyy):
+
+format_es.properties
+format_it.properties
+format_fr.properties
+
+Because the oc_date_format_string was using the incorrect format, it stored the dates in the database incorrectly.  The script oc_date_format_correction_postgres.sql or oc_date_format_correction_oracle.sql (depending on what database you use) will flip the dates into the correct format to be used by OpenClinica.
+
+If you do need to run the script, make sure to only run it ONCE.
+
+If your users only entered data with their browser language set to English, DO NOT DO ANYTHING AT ALL. To repeat, if your users only entered data with their browser language set to English, DO NOT DO ANYTHING AT ALL with these sql scripts.
+
+
+Steps:
+
+1. Execute the SELECT portion of the sql file to see all of the items that are date fields
+2. Execute the UPDATE portion of the sql file to flip all of the dates for those items
+3. Execute the SELECT portion of the sql file to see the dates in the new format

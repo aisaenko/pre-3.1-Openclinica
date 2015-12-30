@@ -1,0 +1,976 @@
+<html>
+
+<head>
+
+<title>OpenClinica Help</title>
+
+<link rel="stylesheet" href="../includes/styles.css" type="text/css">
+
+<script language="JavaScript"
+src="../includes/global_functions_javascript.js"></script>
+
+<style type="text/css">
+
+.popup_BG { background-image: url(../images/main_BG.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	background-color: #FFFFFF;
+	}
+
+.helpnav { background-image: url(../images/dots.gif);
+	background-repeat: repeat-y;
+	background-position: right;
+	padding-right: 18px;
+	}
+
+.helptext { padding-left: 18px;
+	}
+
+.term { font-weight: bold;
+	color: #789EC5;
+	}
+
+</style>
+
+</head>
+
+<body class="popup_BG" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+   <tr>
+	<td valign="top">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	   <tr>
+		<td background="../images/popup_BG.gif"><img
+src="../images/popup_OC.gif"></td>
+		<td background="../images/popup_BG.gif" align="right"><img
+src="../images/popup_Help.gif"></td>
+	   </tr>
+	   <tr>
+		<td colspan="2" style="padding-top: 18px; padding-left: 45px; padding-right: 45px; padding-bottom: 30px;">
+
+<!-- Main Content Area -->
+
+		<table border="0" cellpadding="0" cellspacing="0">
+		   <tr>
+			<td class="Helpnav" valign="top" nowrap>
+
+	<!-- Help topics nav -->
+
+
+	<div class="bullets">
+	<a href="index.html">Table of Contents</a>
+	<br>
+	<blockquote>
+	<a href="1_0_myOpenClinica_Help.html">1. My OpenClinica</a><br>
+	<a href="2_0_submitData_Help.html">2. Submit Data</a><br>
+	<a href="3_0_extractData_Help.html">3. Extract Data</a><br>
+	<a href="4_0_manageStudy_Help.html">4. Manage Study</a><br>
+	<a href="5_0_administerSystem_Help.html">5. Administer System</a><br>
+	</blockquote>
+	 </div>
+
+	<div class="bullets">
+	<a href="glossary.html">Glossary</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="iconkey.html">Icon Key</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="http://www.openclinica.org/page.php?pid=107">OpenClinica Email Forums</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="http://www.openclinica.org/section.php?sid=4">OpenClinica Enterprise</a>
+	</div><br>
+
+	<!-- end Help topics nav -->
+
+			<br></td>
+			<td class="helptext" valign="top">
+
+	<!-- Section Help Text -->
+
+	<h1>3.8 CDISC Syntax File Specifications</h1>
+
+<p>
+            The Operational Data Model (ODM) of Clinical Data Interchange Standards Consortium (CDISC) is a vendor
+            neutral, platform independent format for interchange and archive of data collected in clinical trials.
+            The model represents study metadata, data and administrative data associated with a clinical trial.
+            The ODM has been designed to be compliant with guidance and regulations published by the FDA for computer
+             systems used in clinical trials.
+</p>
+<p>
+            The ODM model categorize a clinical study's data into several kinds of entities including subjects,
+            study events, forms, item groups, items, and annotations. The metadata of a study describes the types of
+            study events, forms, item groups, and items that allowed in the study. The clinical data of a study will
+            typically have many actual entities corresponding to their definitions described in the metadata.
+</p>
+<p>
+	Like any XML file, an ODM file consists of a tree of elements which correspond to entities. Each element consists
+	of required attributes and optional attributes. An ODM file type must be either Snapshot or Transactional.
+	A Snapshot file shows the current state of the included data. A Transactional file shows both latest state and
+	(optionally) some prior states of an included entity. An ODM file has Granularity attribute which describes the
+	coverage information of the ODM file.
+</p>
+<p>
+	For more details about ODM specification, see <a href="http://www.cdisc.org/models/odm/v1.2/ODM1-2-0.html">Specification
+	For The Operational Data Model (ODM)</a>
+</p>
+<p>
+	This document addresses, in the OpenClinica *_odm.xml file, what portions of the CDISC ODM standard has been implemented
+	and how OpenClinica data schema has been mapped with CDISC ODM model.
+</p>
+
+<br><br><br>
+<big><b>OpenClinica 2.2.2 (May, 2008)</b></big>
+
+<p> &nbsp; </p>
+
+<b>Changes have been made in OpenClinica 2.2.2:</b>
+<ul>
+	<li>New <b>ODM</b> elements have been added which are contained in the <b>ItemDef</b> element,
+	including <b>RangeCheck</b>, <b>CheckValue</b>, <b>ErrorMessage</b>,
+	<b>CodeList</b>, <b>CodeListItem</b>, and <b>Decode</b>, etc.</li>
+	<li><em>Length</em> and <em>SignicantDigits</em> attributes of <b>ItemDef</b> have been added
+	when <em>DataType = float</em>. That is, by default, <em>Length = 38</em> and <em>SignificantDigits = 6</em>.
+	<li>If a <b>ItemDef</b> contains <b>CodeListRef</b>, its <em>Length</em> and <em>SignificantDigits</em>
+	will be determined by <em>CodedValue</em>.</li>
+</ul>
+
+<b>Table-1: Mapping Among OpenClinica Data Schema, OpenClinica CRF Spreadsheet and CDISC ODM (OpenClinica 2.2.2 - May 2008).</b>
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="295"><b>CDISC ODM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="295"><b>OpenClinica Data Schema</b></td>
+        <td valign="top" width="72"><b>OpenClinica CRF Spreadsheet</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - Description</td>
+        <td valign="top" width="295">DATASET - description</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - FileOID</td>
+        <td valign="top" width="295">DATASET - dataset_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Study - OID</td>
+        <td valign="top" width="295">DATASET - study_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyName</td>
+        <td valign="top" width="295">STUDY - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyDescription</td>
+        <td valign="top" width="295">STUDY - summary</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ProtocalName</td>
+        <td valign="top" width="295">STUDY - unique-identifier</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventRef - StudyEventOID</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - study_event_definition_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295" >StudyEventDef - OID</td>
+        <td valign="top" width="295">same as StudyEventRef - StudyEventOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Name</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Repeating</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - repeating</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Type</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - type</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - FormOID</td>
+        <td valign="top" width="295">CRF - crf_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - Mandatory</td>
+        <td valign="top" width="295">EVENT_DEFINITION_CRF - required_crf</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - OID</td>
+        <td valign="top" width="295">same as FormRef - FormOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - Name</td>
+        <td valign="top" width="295">CRF - name</td>
+        <td valign="top" width="72">CRF_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupRef - ItemGroupOID</td>
+        <td valign="top" width="295">SECTION - section_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - OID</td>
+        <td valign="top" width="295">same as ItemGroupOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - Name</td>
+        <td valign="top" width="295">SECTION - label</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - SASDataSetName</td>
+        <td valign="top" width="295">same as ItemGroupDef - Name</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - ItemOID</td>
+        <td valign="top" width="295">ITEM - name + ITEM_GROUP - name (if the name is not "Ungrouped") + ITEM_DATA - ordinal (for repeating item) + CRF - crf_id</td>
+        <td valign="top" width="72">ITEM_NAME, GROUP_LABEL is used</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - Mandatory</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - required</td>
+        <td valign="top" width="72">REQUIRED</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - OID</td>
+        <td valign="top" width="295">same as ItemRef - ItemOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Name</td>
+        <td valign="top" width="295">ITEM - name + ITEM_GROUP - name (if the name is not "Ungrouped") + ITEM_DATA - ordinal (for repeating item)</td>
+        <td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - DataType</td>
+        <td valign="top" width="295">ITEM_DATA_TYPE - name</td>
+        <td valign="top" width="72">DATA_TYPES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - SASFieldName</td>
+        <td valign="top" width="295">same as ItemDef - Name</td>
+		<td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Comment</td>
+        <td valign="top" width="295">ITEM - description</td>
+        <td valign="top" width="72">DESCRIPTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Question</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - <br>header + left_item_text + right_item_text</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">RangeCheck - Comparator</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - regexp (if "func:")</td>
+        <td valign="top" width="72">VALIDATION</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">RangeCheck - SoftHard</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CheckValue</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - regexp (if "func:")</td>
+        <td valign="top" width="72">VALIDATION</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ErrorMessage</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - regexp_error_msg (if "func:")</td>
+        <td valign="top" width="72">VALIDATION_ERROR_MESSAGE</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeListRef - CodeListOID</td>
+        <td valign="top" width="295">RESPONSE_SET - response_set_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeList - OID</td>
+        <td valign="top" width="295">same as CodeListRef - CodeListOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeList - Name</td>
+        <td valign="top" width="295">RESPONSE_SET - label</td>
+        <td valign="top" width="72">RESPONSE_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeList - DataType</td>
+        <td valign="top" width="295">same as ItemDef - DataType</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeList - SASFormatName</td>
+        <td valign="top" width="295">same as CodeList - Name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">CodeListItem - CodedValue</td>
+        <td valign="top" width="295">RESPONSE_SET - options_values</td>
+        <td valign="top" width="72">REPONSE_VALUES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Decode</td>
+        <td valign="top" width="295">RESPONSE_SET - options_text</td>
+        <td valign="top" width="72">RESPONSE_OPTIONS_TEXT</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">SubjectData - SubjectKey</td>
+        <td valign="top" width="295">STUDY_SUBJECT - label</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventData - StudyEventOID</td>
+        <td valign="top" width="295">same as StudyEventDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormData - FormOID</td>
+        <td valign="top" width="295">same as FormDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupData - ItemGroupOID</td>
+        <td valign="top" width="295">same as ItemGroupDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - ItemOID</td>
+        <td valign="top" width="295">same as ItemDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - Value</td>
+        <td valign="top" width="295">ITEM_DATA - value</td>
+    </tr>
+</table>
+
+
+
+<br><br><br><br><br>
+<big><b>OpenClinica 2.2 (Nov. 2007) </b></big>
+
+<p> &nbsp; </p>
+
+<b>Changes have been made in OpenClinica 2.2:</b>
+<ul>
+	<li><b>ODM</b> element has been updated: new attribute has been added, that is, <em>ODMVersion = 1.2</em></li>
+	<li><em>schemaLocation</em> has been modified so that users can validate their ODM XML files without connecting to internet.
+	However, users have to put ODM1-2-1.xsd and ODM1-2-1-foundation.xsd to the same directory of their ODM XML files. </li>
+	<li>Some elements have been modified for OpenClinica 2.2 new feature - repeating row.
+		Those ODM elements are: <b>ItemRef</b> - <em>ItemOID</em>, <b>ItemDef</b> - <em>OID</em>,
+		<b>ItemDef</b> - <em>Name</em>, and <b>ItemData</b> - <em>ItemOID</em>.</li>
+	<li><b>ItemDef</b> - <em>Length = 4000</em> has been added if <b>ItemDef</b> - <em>DataType = text</em></li>
+	<li><b>ItemDef</b> - <em>Length = 8</em> has been added if <b>ItemDef</b> - <em>DataType = integer</em></li>
+</ul>
+
+
+<b>Table-1: Mapping Among OpenClinica Data Schema, OpenClinica CRF Spreadsheet and CDISC ODM (OpenClinica 2.2 - Nov. 2007).</b>
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="295"><b>CDISC ODM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="295"><b>OpenClinica Data Schema</b></td>
+        <td valign="top" width="72"><b>OpenClinica CRF Spreadsheet</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - Description</td>
+        <td valign="top" width="295">DATASET - description</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - FileOID</td>
+        <td valign="top" width="295">DATASET - dataset_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Study - OID</td>
+        <td valign="top" width="295">DATASET - study_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyName</td>
+        <td valign="top" width="295">STUDY - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyDescription</td>
+        <td valign="top" width="295">STUDY - summary</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ProtocalName</td>
+        <td valign="top" width="295">STUDY - unique-identifier</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventRef - StudyEventOID</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - study_event_definition_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295" >StudyEventDef - OID</td>
+        <td valign="top" width="295">same as StudyEventRef - StudyEventOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Name</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Repeating</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - repeating</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Type</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - type</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - FormOID</td>
+        <td valign="top" width="295">CRF - crf_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - Mandatory</td>
+        <td valign="top" width="295">EVENT_DEFINITION_CRF - required_crf</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - OID</td>
+        <td valign="top" width="295">same as FormRef - FormOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - Name</td>
+        <td valign="top" width="295">CRF - name</td>
+        <td valign="top" width="72">CRF_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupRef - ItemGroupOID</td>
+        <td valign="top" width="295">SECTION - section_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - OID</td>
+        <td valign="top" width="295">same as ItemGroupOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - Name</td>
+        <td valign="top" width="295">SECTION - label</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - SASDataSetName</td>
+        <td valign="top" width="295">same as ItemGroupDef - Name</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - ItemOID</td>
+        <td valign="top" width="295">ITEM - name + ITEM_GROUP - name (if the name is not "Ungrouped") + ITEM_DATA - ordinal (for repeating item) + CRF - crf_id</td>
+        <td valign="top" width="72">ITEM_NAME, GROUP_LABEL is used</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - Mandatory</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - required</td>
+        <td valign="top" width="72">REQUIRED</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - OID</td>
+        <td valign="top" width="295">same as ItemRef - ItemOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Name</td>
+        <td valign="top" width="295">ITEM - name + ITEM_GROUP - name (if the name is not "Ungrouped") + ITEM_DATA - ordinal (for repeating item)</td>
+        <td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - DataType</td>
+        <td valign="top" width="295">ITEM_DATA_TYPE - name</td>
+        <td valign="top" width="72">DATA_TYPES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - SASFieldName</td>
+        <td valign="top" width="295">same as ItemDef - Name</td>
+		<td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Comment</td>
+        <td valign="top" width="295">ITEM - description</td>
+        <td valign="top" width="72">DESCRIPTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Question</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - <br>header + left_item_text + right_item_text</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">SubjectData - SubjectKey</td>
+        <td valign="top" width="295">STUDY_SUBJECT - label</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventData - StudyEventOID</td>
+        <td valign="top" width="295">same as StudyEventDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormData - FormOID</td>
+        <td valign="top" width="295">same as FormDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupData - ItemGroupOID</td>
+        <td valign="top" width="295">same as ItemGroupDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - ItemOID</td>
+        <td valign="top" width="295">same as ItemDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - Value</td>
+        <td valign="top" width="295">ITEM_DATA - value</td>
+    </tr>
+</table>
+
+
+
+
+
+<br><br><br><br><br>
+<big><b>OpenClinica 2.0.1 (Mar. 2007)</b></big>
+
+<p> &nbsp; </p>
+
+<b>Changes have been made in this version:</b>
+<ul>
+	<li><b>OpenClinica Date (MM/DD/YYYY) </b> datatype has been convert to <b>CDSIC ODM Date (YYYY-MM-DD)</b> datatype. </li>
+	<li>Add two more Metadata elements, i.e. <b>Question</b> and <b>Comment</b></li>
+	<li>Change the mapping of ODM Metadata elements <b>ItemDef</b> - <em>Name</em>.
+	And ItemDef - <em>SASFieldName</em> has the same mapping as <b>ItemDef</b> - <em>Name</em>. <br>
+	In the previous version, this attribute has been mapped to
+	OpenClinica ITEM_FORM_METADATA table's field <em>left_item_text</em>. In the current version, it has been mapped to
+	ITEM table's field <em>Name</em>.</li>
+	<li>Change the criterion for <b>ItemGroupRef</b> - <em>Mandatory</em>. <br>
+	Before, it has been set as "No". Now, it has been set as "Yes" if there is at least one item in this group which
+	has been marked as required. If there is no required item in this item group, <em>Mandatory</em> has been set as "No". </li>
+	<li>Change <b>ItemRef</b> - <em>ItemOID</em> to combination of ITEM table's field <em>name</em> and CRF table's field <em>crf-id</em>.<br>
+	Before, it has been mapped to ITEM table's field <em>name</em></li>.
+	<li>Change the mapping of element <b>StudyDescription</b> so that all of elements <b>StudyName</b>, <b>StudyDescription</b>
+	and <b>ProtocolName</b> refer to the same active study.</li>
+	<li>When one item's data type is integer, it will be converted to CDSIC integer type only if
+	this item's value can be used to do calculation. Its data type will be treated as "text" if its value
+	is actually index of different selection buttons.</li>
+	<li>Generate unique SASDatasetName in the whole file.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<b>List-1: Elements implemented (OpenClinica 2.0.1 - 2007). </b>
+<ol>
+	<li>General Elements</li>
+	<ul>
+		<li>ODM (<em>Description, FileType, FileOID, CreationDateTime</em>) <br>
+		<em>FileType</em> has been default set as <b>Snapshot</b>. <em>CreationDataTime</em> is set automatically when the file is created.</li>
+		<li>Study (<em>OID</em>)</li>
+		<li>GlobalVariables</li>
+		<li>StudyName</li>
+		<li>StudyDescription</li>
+		<li>ProtocolName</li>
+	</ul>
+	<li>Metadata Elements</li>
+	<ul>
+		<li>MetaDataVersion (<em>OID, Name</em>) <br>
+		Both <em>OID</em> and <em>Name</em> could be inputted by users. Or, by default is <em>OID = "v1.0.0";
+		Name = "Version 1.0.0"</em></li>
+		<li>Include (<em>StudyOID, MetaDataVersionOID</em>) <br>
+		Both <em>StudyOID</em> and <em>MetaDataVersionOID</em> are from users' input.
+		In order to have "Include" elements, <em>MetaDataVersionOID</em>, i.e. <em>OID</em> of the previous MetaDataVersion, must be given.
+		If only <em>MetaDataVersionOID</em> is available and <em>StudyOID</em>, i.e. <em>OID</em> of the previous Study, has not been provided,
+		then <em>StudyOID</em> is as the same as the current Study OID.</li>
+		<li>Protocol</li>
+		<li>StudyEventRef (<em>StudyEventOID, Mandatory</em>) <br>
+		<em>Mandatory</em> has been set as "Yes".</li>
+		<li>StudyEventDef (<em>OID, Name, Repeating, Type</em>)</li>
+		<li>FormRef (<em>FormOID, Mandatory</em>)</li>
+		<li>FormDef (<em>OID, Name, Repeating</em>) <br>
+		<em>Repeating</em> has been set as "No"</li>
+		<li>ItemGroupRef (<em>ItemGroupOID, Mandatory</em>) <br>
+		<em>Mandatory</em> has been set as "Yes" if there is at least one item in this group which has been marked as required,
+		otherwise it has been set as "No".</li>
+		<li>ItemGroupDef (<em>OID, Name, Repeating, SASDatasetName</em>) <br>
+		<em>Repeating</em> has been set as "No"</li>
+		<li>ItemRef (<em>ItemOID, Mandatory</em>)</li>
+		<li>ItemDef (<em>OID, Name, DataType, SASFieldName, Comment</em>)</li>
+		<li>Question</li>
+	</ul>
+	<li>Clinical Data Elements</li>
+	<ul>
+		<li>ClinicalData (<em>StudyOID, MetaDataVersionOID</em>) <br>
+		<em>StudyOID</em> is same as <em>OID</em> of Study; <em>MetaDataVersionOID</em> is same as <em>OID</em> of MetaDataVersion.</li>
+		<li>SubjectData (<em>SubjectKey</em>)</li>
+		<li>StudyEventData (<em>StudyEventOID</em>)</li>
+		<li>FormData (<em>FormOID</em>)</li>
+		<li>ItemGroupData (<em>ItemGroupOID, TransactionType</em>) <br>
+		<em>TransationType</em> is set as "insert".</li>
+		<li>ItemData (<em>ItemOID, Value</em>)</li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<b>Table-1: Mapping Among OpenClinica Data Schema, OpenClinica CRF Spreadsheet and CDISC ODM (OpenClinica 2.0.1 - 2007).</b>
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="295"><b>CDISC ODM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="295"><b>OpenClinica Data Schema</b></td>
+        <td valign="top" width="72"><b>OpenClinica CRF Spreadsheet</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - Description</td>
+        <td valign="top" width="295">DATASET - description</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - FileOID</td>
+        <td valign="top" width="295">DATASET - dataset_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Study - OID</td>
+        <td valign="top" width="295">DATASET - study_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyName</td>
+        <td valign="top" width="295">STUDY - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyDescription</td>
+        <td valign="top" width="295">STUDY - summary</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ProtocalName</td>
+        <td valign="top" width="295">STUDY - unique-identifier</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventRef - StudyEventOID</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - study_event_definition_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295" >StudyEventDef - OID</td>
+        <td valign="top" width="295">same as StudyEventRef - StudyEventOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Name</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Repeating</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - repeating</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Type</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - type</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - FormOID</td>
+        <td valign="top" width="295">CRF - crf_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - Mandatory</td>
+        <td valign="top" width="295">EVENT_DEFINITION_CRF - required_crf</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - OID</td>
+        <td valign="top" width="295">same as FormRef - FormOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - Name</td>
+        <td valign="top" width="295">CRF - name</td>
+        <td valign="top" width="72">CRF_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupRef - ItemGroupOID</td>
+        <td valign="top" width="295">SECTION - section_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - OID</td>
+        <td valign="top" width="295">same as ItemGroupOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - Name</td>
+        <td valign="top" width="295">SECTION - label</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - SASDataSetName</td>
+        <td valign="top" width="295">same as ItemGroupDef - Name</td>
+        <td valign="top" width="72">SECTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - ItemOID</td>
+        <td valign="top" width="295">ITEM - name + CRF - crf_id</td>
+        <td valign="top" width="72">ITEM_NAME is used</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - Mandatory</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - required</td>
+        <td valign="top" width="72">REQUIRED</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - OID</td>
+        <td valign="top" width="295">same as ItemRef - ItemOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Name</td>
+        <td valign="top" width="295">ITEM - name</td>
+        <td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - DataType</td>
+        <td valign="top" width="295">ITEM_DATA_TYPE - name</td>
+        <td valign="top" width="72">DATA_TYPES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - SASFieldName</td>
+        <td valign="top" width="295">same as ItemDef - Name</td>
+		<td valign="top" width="72">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Comment</td>
+        <td valign="top" width="295">ITEM - description</td>
+        <td valign="top" width="72">DESCRIPTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Question</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - <br>header + left_item_text + right_item_text</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">SubjectData - SubjectKey</td>
+        <td valign="top" width="295">STUDY_SUBJECT - label</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventData - StudyEventOID</td>
+        <td valign="top" width="295">same as StudyEventDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormData - FormOID</td>
+        <td valign="top" width="295">same as FormDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupData - ItemGroupOID</td>
+        <td valign="top" width="295">same as ItemGroupDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - ItemOID</td>
+        <td valign="top" width="295">same as ItemDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - Value</td>
+        <td valign="top" width="295">ITEM_DATA - value</td>
+    </tr>
+</table>
+
+
+
+<br><br><br><br><br>
+<big><b>OpenClinica 2.0 ( Nov. 11, 2006 )</b></big>
+<ul>
+	<li><b>This version uses</b> <a href="http://www.cdisc.org/models/odm/v1.2.1/">CDISC ODM 1.2.1 Standard</a> for creating
+	OpenClinica data in ODM XML format.</li>
+	<li>The generated ODM file is <b>Snapshot</b> type.</li>
+	<li>The generated ODM file includes one study and required attributes of elements for <b>Metadata and ClinicalData</b> in
+	this study. </li>
+	<li><b>Metadata</b> describes the types of all study event definitions happened in a study and all items associated with
+	clinical report forms belong to those study event definitions at the state when this ODM file is created. </li>
+	<li><b>ClinicalData</b> includes all chosen StudyEventData, FormData, ItemGroupData and ItemData for all chosen subjects
+	in the study. </li>
+</ul>
+
+<p>&nbsp;</p>
+
+<b>List-1: Elements implemented (OpenClinica 2.0-Nov. 11, 2006). </b>
+<ol>
+	<li>General Elements</li>
+	<ul>
+		<li>ODM (<em>Description, FileType, FileOID, CreationDateTime</em>) <br>
+		<em>FileType</em> has been default set as <b>Snapshot</b>. <em>CreationDataTime</em> is set automatically when the file is created.</li>
+		<li>Study (<em>OID</em>)</li>
+		<li>GlobalVariables</li>
+		<li>StudyName</li>
+		<li>StudyDescription</li>
+		<li>ProtocolName</li>
+	</ul>
+	<li>Metadata Elements</li>
+	<ul>
+		<li>MetaDataVersion (<em>OID, Name</em>) <br>
+		Both <em>OID</em> and <em>Name</em> could be inputted by users. Or, by default is <em>OID = "v1.0.0";
+		Name = "Version 1.0.0"</em></li>
+		<li>Include (<em>StudyOID, MetaDataVersionOID</em>) <br>
+		Both <em>StudyOID</em> and <em>MetaDataVersionOID</em> are from users' input.
+		In order to have "Include" elements, <em>MetaDataVersionOID</em>, i.e. <em>OID</em> of the previous MetaDataVersion, must be given.
+		If only <em>MetaDataVersionOID</em> is available and <em>StudyOID</em>, i.e. <em>OID</em> of the previous Study, has not been provided,
+		then <em>StudyOID</em> is as the same as the current Study OID.</li>
+		<li>Protocol</li>
+		<li>StudyEventRef (<em>StudyEventOID, Mandatory</em>) <br>
+		<em>Mandatory</em> has been set as "Yes".</li>
+		<li>StudyEventDef (<em>OID, Name, Repeating, Type</em>)</li>
+		<li>FormRef (<em>FormOID, Mandatory</em>)</li>
+		<li>FormDef (<em>OID, Name, Repeating</em>) <br>
+		<em>Repeating</em> has been set as "No"</li>
+		<li>ItemGroupRef (<em>ItemGroupOID, Mandatory</em>) <br>
+		<em>Mandatory</em> has been set as "No"</li>
+		<li>ItemGroupDef (<em>OID, Name, Repeating, SASDatasetName</em>) <br>
+		<em>Repeating</em> has been set as "No"</li>
+		<li>ItemRef (<em>ItemOID, Mandatory</em>)</li>
+		<li>ItemDef (<em>OID, Name, DataType, SASFieldName</em>)</li>
+	</ul>
+	<li>Clinical Data Elements</li>
+	<ul>
+		<li>ClinicalData (<em>StudyOID, MetaDataVersionOID</em>) <br>
+		<em>StudyOID</em> is same as <em>OID</em> of Study; <em>MetaDataVersionOID</em> is same as <em>OID</em> of MetaDataVersion.</li>
+		<li>SubjectData (<em>SubjectKey</em>)</li>
+		<li>StudyEventData (<em>StudyEventOID</em>)</li>
+		<li>FormData (<em>FormOID</em>)</li>
+		<li>ItemGroupData (<em>ItemGroupOID, TransactionType</em>) <br>
+		<em>TransationType</em> is set as "insert".</li>
+		<li>ItemData (<em>ItemOID, Value</em>)</li>
+	</ul>
+</ol>
+
+<p>&nbsp;</p>
+
+<b>Table-1: Mapping OpenClinica Data Schema To CDISC ODM (For OpenClinica 2.0-Nov. 11, 2006).</b>
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="295"><b>CDISC ODM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="295"><b>OpenClinica Data Schema</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - Description</td>
+        <td valign="top" width="295">DATASET - description</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ODM - FileOID</td>
+        <td valign="top" width="295">DATASET - dataset_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Study - OID</td>
+        <td valign="top" width="295">DATASET - study_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyName</td>
+        <td valign="top" width="295">STUDY - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyDescription</td>
+        <td valign="top" width="295">STUDY - summary</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ProtocalName</td>
+        <td valign="top" width="295">STUDY - unique-identifier</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventRef - StudyEventOID</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - study_event_definition_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295" >StudyEventDef - OID</td>
+        <td valign="top" width="295">same as StudyEventRef - StudyEventOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Name</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Repeating</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - repeating</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventDef - Type</td>
+        <td valign="top" width="295">STUDY_EVENT_DEFINITION - type</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - FormOID</td>
+        <td valign="top" width="295">CRF - crf_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormRef - Mandatory</td>
+        <td valign="top" width="295">EVENT_DEFINITION_CRF - required_crf</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - OID</td>
+        <td valign="top" width="295">same as FormRef - FormOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormDef - Name</td>
+        <td valign="top" width="295">CRF - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupRef - ItemGroupOID</td>
+        <td valign="top" width="295">SECTION - section_id</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - OID</td>
+        <td valign="top" width="295">same as ItemGroupOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - Name</td>
+        <td valign="top" width="295">SECTION - label</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupDef - SASDataSetName</td>
+        <td valign="top" width="295">same as ItemGroupDef - Name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - ItemOID</td>
+        <td valign="top" width="295">ITEM - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemRef - Mandatory</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - required</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - OID</td>
+        <td valign="top" width="295">same as ItemRef - ItemOID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - Name</td>
+        <td valign="top" width="295">ITEM_FORM_METADATA - left_item_text</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - DataType</td>
+        <td valign="top" width="295">ITEM_DATA_TYPE - name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemDef - SASFieldName</td>
+        <td valign="top" width="295">same as ItemDef - Name</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">SubjectData - SubjectKey</td>
+        <td valign="top" width="295">STUDY_SUBJECT - label</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">StudyEventData - StudyEventOID</td>
+        <td valign="top" width="295">same as StudyEventDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">FormData - FormOID</td>
+        <td valign="top" width="295">same as FormDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemGroupData - ItemGroupOID</td>
+        <td valign="top" width="295">same as ItemGroupDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - ItemOID</td>
+        <td valign="top" width="295">same as ItemDef - OID</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">ItemData - Value</td>
+        <td valign="top" width="295">ITEM_DATA - value</td>
+    </tr>
+</table>
+
+
+
+	<!-- End Help Text -->
+	<p>&nbsp;</p>
+			</td>
+		   </tr>
+		</table>
+		</td>
+	   </tr>
+	</table>
+	</td>
+   </tr>
+   <tr>
+	<td valign="bottom" align="right" style="padding-right: 18px; padding-bottom: 8px">
+
+	<a href="javascript:window.close();">Exit Help</a>
+
+	</td>
+   </tr>
+</table>
+
+</body>
+
+</html>

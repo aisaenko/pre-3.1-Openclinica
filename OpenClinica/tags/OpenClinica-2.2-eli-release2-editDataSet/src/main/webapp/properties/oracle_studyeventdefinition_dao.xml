@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM STUDY_EVENT_DEFINITION WHERE 
+		STUDY_EVENT_DEFINITION_ID = ?</sql>
+	</query>
+	<query>
+		<name>findByPKAndStudy</name>
+		<sql>
+			SELECT *
+			FROM STUDY_EVENT_DEFINITION
+			WHERE study_event_definition_id = ?
+				AND study_id=?
+		</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM STUDY_EVENT_DEFINITION</sql>
+	</query>
+	<query>
+		<name>findAllByStudy</name>
+		<sql>SELECT * FROM STUDY_EVENT_DEFINITION WHERE study_id = ?</sql>
+	</query>
+	<query>
+		<name>findNextKey</name>
+		<sql>select s_study_event_definition_id.nextval as key</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO STUDY_EVENT_DEFINITION (study_event_definition_id ,
+		STUDY_ID, NAME,DESCRIPTION, REPEATING, TYPE, CATEGORY, OWNER_ID,
+		 STATUS_ID,	DATE_CREATED) 
+		VALUES (?,?,?,?,?,?,?,?,?,SYSDATE)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE STUDY_EVENT_DEFINITION SET STUDY_ID=?,NAME=?,
+		DESCRIPTION=?,REPEATING=?,TYPE=?,CATEGORY=?,STATUS_ID=?,
+		DATE_UPDATED=SYSDATE,UPDATE_ID=? WHERE STUDY_EVENT_DEFINITION_ID=?</sql>
+	</query>
+	<query>
+		<name>findAllWithStudyEvent</name>
+		<sql>
+			SELECT DISTINCT
+				D.*
+			FROM
+				STUDY_EVENT_DEFINITION D
+				, STUDY_EVENT E
+			WHERE
+				D.study_event_definition_id = E.study_event_definition_id
+				AND D.study_id=?
+		</sql>
+	</query>
+</queries>

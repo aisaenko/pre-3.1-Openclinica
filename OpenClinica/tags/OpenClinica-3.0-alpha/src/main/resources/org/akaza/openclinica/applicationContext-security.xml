@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd
+                           http://www.springframework.org/schema/security 
+                           http://www.springframework.org/schema/security/spring-security-2.0.4.xsd">
+
+ 	
+  <security:http auto-config="true" access-denied-page="/accounts/denied.htm">
+
+    <security:intercept-url pattern="/pages/login/login" filters="none"/>
+    <security:intercept-url pattern="/includes/**" filters="none"/>
+    <security:intercept-url pattern="/images/**" filters="none"/>
+    <security:intercept-url pattern="/help/**" filters="none"/>
+    <security:intercept-url pattern="/ws/**" filters="none"/>
+    <security:form-login login-page="/pages/login/login" authentication-failure-url="/pages/login/login?action=errorLogin" 
+      default-target-url='/MainMenu' always-use-default-target='true'/>
+    <security:intercept-url pattern="/**" access="ROLE_USER" />
+
+  </security:http>
+
+    <security:authentication-provider user-service-ref="ocUserDetailsService">
+        <security:password-encoder hash="md5" />
+        <!-- <security:user-service properties="/WEB-INF/users.properties" /> -->
+    </security:authentication-provider>
+    
+    <bean id="ocUserDetailsService" class="org.springframework.security.userdetails.jdbc.JdbcDaoImpl"
+        p:dataSource-ref="dataSource"
+        p:usersByUsernameQuery="SELECT user_name,passwd,'true' as enabled FROM user_account WHERE user_name = ?" />
+    
+    <!--<security:global-method-security secured-annotations="enabled">
+        <security:protect-pointcut
+            expression="execution(* com.springsource..*Service.*(..))"
+            access="ROLE_USER" />
+    </security:global-method-security>
+--></beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="OpenClinica">
+  <bannerLeft>
+    <name>OpenClinica Management</name>
+    <src>http://www.openclinica.org/images/header_Developers.gif</src>
+    <href>http://openclinica.org/</href>
+  </bannerLeft>
+  <!--
+  <bannerRight>
+    <src>http://maven.apache.org/images/maven-small.gif</src>
+  </bannerRight>
+  -->
+  <body>
+    <links>
+      <item name="OpenClinica" href="http://openclinica.org/" />
+      <item name="Akaza Research" href="http://akazaresearch.com/"/>
+      <!--<item name="Maven 2" href="http://maven.apache.org/maven2/"/>-->
+    </links>
+
+    <menu name="OpenClinica 2.0.1">
+      <!--<item name="APT Format" href="format.html"/>-->
+      <item name="FAQ" href="faq.html"/>
+      <!--<item name="Xdoc Example" href="xdoc.html"/>-->      
+    </menu>
+    ${reports}
+  </body>
+</project>

@@ -1,0 +1,10 @@
+#filePath=c:\\tomcat\\openclinica.data\\
+filePath=/usr/share/tomcat/openclinica.data/
+dataBase=postgres
+passwd_expiration_time=180
+auth_mode=password
+user_account_notification=email
+smtpHost=mail.example.com
+adminEmail=admin@example.com
+sysURL=http://localhost:8080/OpenClinica/MainMenu
+change_passwd_required=0

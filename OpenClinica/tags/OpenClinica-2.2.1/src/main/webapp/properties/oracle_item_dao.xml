@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM ITEM WHERE 
+		ITEM_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM ITEM</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO ITEM (NAME, DESCRIPTION, UNITS, PHI_STATUS,
+		ITEM_DATA_TYPE_ID, ITEM_REFERENCE_TYPE_ID, STATUS_ID, OWNER_ID,
+		DATE_CREATED) 
+		VALUES (?,?,?,?,?,?,?,?,SYSDATE)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE ITEM SET NAME=?,DESCRIPTION=?,UNITS=?,
+		PHI_STATUS=?,ITEM_DATA_TYPE_ID=?,ITEM_REFERENCE_TYPE_ID=?,STATUS_ID=?,
+		DATE_UPDATED=SYSDATE,UPDATE_ID=? WHERE 
+		ITEM_ID=?</sql>
+	</query>
+	<query>
+		<name>findByName</name>
+		<sql>select * from item  
+		where name=?
+		</sql>
+	</query>
+</queries>

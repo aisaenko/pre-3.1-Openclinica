@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                            http://www.springframework.org/schema/tx
+                            http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                            http://www.springframework.org/schema/aop
+                            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+    
+     <!-- Define Task -->
+    <bean id="autoCommitTask" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject" ref="databaseCctsService" />
+        <property name="targetMethod" value="autoCommit" />
+    </bean>
+    
+    <!-- Define Task Schedule -->  
+    <bean id="scheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="60000" /> <!-- wait 60 seconds before starting repeated execution -->
+        <property name="period" value="60000" /> <!-- run every 60 seconds -->
+        <property name="timerTask" ref="autoCommitTask" />
+    </bean>
+    
+    <!-- Initialize Tasks  -->
+    <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+    <property name="scheduledTimerTasks">
+        <list>
+            <ref bean="scheduledTask" />
+        </list>
+    </property>
+    </bean>
+    
+</beans>

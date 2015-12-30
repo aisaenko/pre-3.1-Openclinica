@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>
+		 SELECT * FROM audit_event WHERE audit_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM audit_event</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO audit_event
+		   (AUDIT_DATE,AUDIT_TABLE,USER_ID,ENTITY_ID,REASON_FOR_CHANGE) 
+		   VALUES (SYSDATE,?,?,?,?)
+		</sql>
+	</query>	
+	<query>
+	 <name>findAggregatesByTableName</name>
+	 <sql>
+	      SELECT count(*), av.column_name 
+	       FROM audit_event a,audit_event_values av 
+           WHERE a.audit_id = av.audit_id and
+           a.audit_table = ? group by av.column_name
+      </sql>
+	</query>
+</queries>

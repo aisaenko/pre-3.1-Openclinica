@@ -1,0 +1,2 @@
+INSERT INTO discrepancy_note_type (discrepancy_note_type_id, name, description) VALUES (6, 'Query', '');
+INSERT INTO discrepancy_note_type (discrepancy_note_type_id, name, description) VALUES (7, 'Reason for Change', '');

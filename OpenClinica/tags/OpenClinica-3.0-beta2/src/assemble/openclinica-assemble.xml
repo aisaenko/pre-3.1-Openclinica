@@ -1,0 +1,39 @@
+<assembly>
+  <id></id>
+  <formats>
+    <format>tar.gz</format>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <includes>
+        <include>README*</include>
+        <include>LICENSE*</include>
+        <include>NOTICE*</include>
+      </includes>
+    </fileSet>
+	<fileSet>
+      <directory>src/main/config/install-docs</directory>
+      <outputDirectory>install-docs</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/config</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>database/PostgreSQL/3.0-beta2/install/*</include>
+        <include>database/PostgreSQL/3.0-beta2/upgrade/*</include>
+        <include>database/Oracle/3.0-beta2/install/*</include>
+        <include>database/Oracle/3.0-beta2/upgrade/*</include>        
+        <include>libraries/*</include>
+      </includes>
+
+    </fileSet>
+  </fileSets>
+  <files>
+  	<file>
+  		<source>target/${pom.artifactId}-${pom.version}.war</source>
+  		<outputDirectory>distribution</outputDirectory>
+  		<destName>${pom.artifactId}.war</destName>
+  	</file>
+  </files>
+</assembly>

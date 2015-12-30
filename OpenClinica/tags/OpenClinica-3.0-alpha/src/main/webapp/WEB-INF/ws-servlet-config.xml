@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:util="http://www.springframework.org/schema/util"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+							http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+							http://www.springframework.org/schema/util 
+							http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+     
+     <!-- WSDL Definitions -->
+     <bean id="subject" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+        <property name="schema" ref="schema"/>
+        <property name="portTypeName" value="ws"/>
+        <property name="locationUri" value="/ws/subject/v1"/>
+     </bean>
+     
+     <bean id="schema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+         <property name="xsd" value="/WEB-INF/schemas/subject.xsd" />
+     </bean>
+    
+    <!-- Endpoint Mappings  -->
+    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+        <property name="interceptors">
+            <list><ref bean="wsSecurityInterceptor"/></list>
+        </property>
+    </bean>
+    
+    
+    <bean class="org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter">
+        <property name="namespaces">
+            <props>
+                <prop key="s">http://openclinica.org/ws/subject/v1</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!--  Endpoints -->  
+    <bean id="subjectEndpoint" class="org.akaza.openclinica.ws.SubjectEndpoint">
+        <constructor-arg ref="subjectService"/>
+        <constructor-arg ref="dataSource"/>
+        <property name="dateFormat" value="yyyy-MM-dd"/>
+    </bean>
+    
+    <!-- Security -->
+    <bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+        <property name="secureResponse" value="false"/>
+        <property name="policyConfiguration" value="classpath:securityPolicy.xml"/>
+        <property name="callbackHandlers" ref="springSecurityHandler"/>
+    </bean>
+    
+    <bean id="authenticationManager" class="org.springframework.security.providers.ProviderManager">
+      <property name="providers">
+          <bean class="org.springframework.security.providers.dao.DaoAuthenticationProvider">
+              <property name="userDetailsService" ref="ocUserDetailsService"/>
+          </bean>
+      </property>
+    </bean>
+  
+    <bean id="springSecurityHandler"
+      class="org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler">
+    <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+</beans>
+    
+    

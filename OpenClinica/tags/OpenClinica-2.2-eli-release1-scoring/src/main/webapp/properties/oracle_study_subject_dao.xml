@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM study_subject WHERE 
+		study_subject_id = ?</sql>
+	</query>
+	<query>
+		<name>findByPKAndStudy</name>
+		<sql>SELECT * FROM study_subject WHERE study_subject_id = ? AND study_id=?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM study_subject</sql>
+	</query>
+	<query>
+		<name>findByLabelAndStudy</name>
+		<sql>SELECT * FROM study_subject WHERE label=? AND study_id=?</sql>
+	</query>
+	<query>
+		<name>findAllByStudy</name>
+		<sql>SELECT * FROM study_subject WHERE study_id=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO study_subject 
+		   (LABEL,  SUBJECT_ID,  STUDY_ID, STATUS_ID,  
+		    DATE_CREATED,  OWNER_ID,  STUDY_GROUP_ID, ENROLLMENT_DATE) 
+		   VALUES (?,?,?,?,SYSDATE,?,?, ?)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE study_subject SET LABEL=?,  SUBJECT_ID=?,  STUDY_ID=?, 
+		  STATUS_ID=?, STUDY_GROUP_ID=?, DATE_UPDATED=?,  
+		  UPDATE_ID=? WHERE STUDY_SUBJECT_ID=?
+	    </sql>
+	</query>
+	<query>
+		<name>getCurrentPK</name>
+		<sql>SELECT currval('study_subject_study_subject_id_seq') AS key</sql>
+	</query>
+	<query>
+		<name>findAllWithStudyEvent</name>
+		<sql>
+			SELECT DISTINCT
+				S.*
+			FROM
+				study_subject S
+				, study_event E
+			WHERE
+				S.subject_id = E.subject_id
+				AND S.study_id=?
+		</sql>
+	</query>
+	<query>
+		<name>findBySubjectIdAndStudy</name>
+		<sql>SELECT * FROM study_subject WHERE subject_id=? AND study_id=?</sql>
+	</query>
+</queries>

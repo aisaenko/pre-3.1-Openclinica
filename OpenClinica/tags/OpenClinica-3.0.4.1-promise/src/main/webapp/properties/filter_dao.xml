@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM FILTER WHERE 
+		FILTER_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM FILTER WHERE STATUS_ID=1</sql>
+	</query>
+	<query>
+		<name>findAllAdmin</name>
+		<sql>SELECT * FROM FILTER</sql>
+	</query>
+	<query>
+		<name>findByDataset</name>
+		<sql>SELECT F.FILTER_ID,
+		F.NAME,
+		F.DESCRIPTION,
+		F.SQL_STATEMENT,
+		F.STATUS_ID,
+		F.DATE_CREATED,
+		F.DATE_UPDATED,
+		F.OWNER_ID,
+		F.UPDATE_ID FROM FILTER F, DATASET_FILTER DF
+		WHERE F.FILTER_ID = DF.FILTER_ID
+		AND F.FILTER_ID=?</sql>
+	</query>
+	<query>
+		<name>getCurrentPK</name>
+		<sql>select currval('filter_filter_id_seq') AS key</sql>
+	</query>
+	<query>
+		<name>getNextPK</name>
+		<sql>select nextval('filter_filter_id_seq') AS key</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO FILTER (FILTER_ID,NAME, DESCRIPTION, SQL_STATEMENT, 
+		STATUS_ID, DATE_CREATED, OWNER_ID) 
+		VALUES (?,?,?,?,?,NOW(),?)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE FILTER SET NAME=?, DESCRIPTION=?,
+		STATUS_ID=?,SQL_STATEMENT=?,DATE_UPDATED=NOW(),
+		UPDATE_ID=? WHERE FILTER_ID=?</sql>
+	</query>
+	<!-- added for pep's data extract permissions -->
+	<query>
+		<name>createPermissions</name>
+		<sql>insert into permissions_filter (study_event_definition_id, 
+		crf_id, item_id, role_id, permit, owner_id, date_created) values (?,?,?,?,?,?, now())</sql>
+	</query>
+	<query>
+		<name>findPermissionsByStudy</name>
+		<sql>select p_f.* from permissions_filter p_f, study_event_definition sed
+		where sed.study_event_definition_id = p_f.study_event_definition_id and
+		sed.study_id = ?</sql>
+	</query>
+	<query>
+		<name>updatePermissions</name>
+		<sql>update permissions_filter set permit = ?, date_updated = now(), update_id = ? 
+		where study_event_definition_id = ? and
+		crf_id = ? and item_id = ? and role_id = ?</sql>
+	</query>
+	<query>
+		<name>isPermissionInDB</name>
+		<sql>select * from permissions_filter where study_event_definition_id = ? and
+		crf_id = ? and item_id = ? and role_id = ?</sql>
+	</query>
+	<!-- end of new queries -->
+</queries>

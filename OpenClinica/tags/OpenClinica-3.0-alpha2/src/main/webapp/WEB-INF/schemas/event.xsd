@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openclinica.org/ws/event/v1"
+    xmlns:events="http://openclinica.org/ws/event/v1" 
+    elementFormDefault="qualified">
+
+
+    <element name="scheduleRequest">
+        <complexType>
+            <sequence>
+                <element name="subject" type="events:SubjectTypeEvent"/>
+                <element name="study" type="events:StudyTypeEvent"/>
+                <element name="eventDefinitionOID" type="events:customStringTypeEvent"/>
+                <element name="location" type="events:customStringTypeEvent"/>
+                <element name="startDate" type="date"/>
+                <element name="startTime" type="events:customTimeTypeEvent" minOccurs="0"/>
+                <element name="endDate" type="date" minOccurs="0"/>
+                <element name="endTime" type="events:customTimeTypeEvent" minOccurs="0"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <element name="scheduleResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="SubjectTypeEvent">
+        <sequence>
+            <element name="studySubjectId" type="events:customStringTypeEvent"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="StudyTypeEvent">
+        <attribute name="uniqueIdentifier" type="events:customStringTypeEvent"/>
+    </complexType>
+    
+    <simpleType name="customStringTypeEvent">
+        <restriction base="normalizedString">
+            <minLength value="1"/>
+            <whiteSpace value="collapse"/> 
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="customDateTypeEvent">
+        <restriction base="integer">
+            <pattern value="[1-2][0-9][0-9][0-9]"></pattern>
+            <whiteSpace value="collapse"/> 
+        </restriction>
+    </simpleType>
+    <simpleType name="customTimeTypeEvent">
+        <restriction base="integer">
+            <pattern value="[0-2][0-9]:[0-9][0-9]"></pattern>
+            <whiteSpace value="collapse"/> 
+        </restriction>
+    </simpleType>
+    
+</schema>

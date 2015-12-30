@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM STUDY_EVENT WHERE 
+		STUDY_EVENT_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAllByDefinition</name>
+		<sql>SELECT * FROM STUDY_EVENT WHERE 
+		STUDY_EVENT_DEFINITION_ID = ?</sql>
+	</query>
+	<query>
+		<name>findCRFsByStudyEvent</name>
+		<sql>SELECT C.CRF_ID, C.STATUS_ID, C.NAME, C.DESCRIPTION,
+		V.CRF_VERSION_ID, V.NAME, V.REVISION_NOTES FROM CRF C, 
+		CRF_VERSION V, EVENT_DEFINITION_CRF EDC 
+		WHERE C.CRF_ID = V.CRF_ID
+		AND EDC.CRF_ID = C.CRF_ID
+		AND EDC.STUDY_EVENT_DEFINITION_ID =?</sql>
+	</query>
+	<query>
+		<name>findCRFsByStudy</name>
+		<sql>SELECT distinct C.CRF_ID, C.NAME AS CRF_NAME, C.DESCRIPTION,
+     V.CRF_VERSION_ID, V.NAME AS VER_NAME, V.REVISION_NOTES,
+     SED.STUDY_EVENT_DEFINITION_ID, SED.NAME AS SED_NAME FROM CRF C,
+     CRF_VERSION V, EVENT_DEFINITION_CRF EDC, STUDY_EVENT_DEFINITION SED WHERE
+     C.CRF_ID = V.CRF_ID AND EDC.CRF_ID = C.CRF_ID AND
+     EDC.STUDY_EVENT_DEFINITION_ID = SED.STUDY_EVENT_DEFINITION_ID AND
+     SED.STATUS_ID = 1 AND EDC.STUDY_ID = ? ORDER BY
+     C.CRF_ID, V.CRF_VERSION_ID</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM STUDY_EVENT</sql>
+	</query>
+	<query>
+		<name>findAllByDefinitionAndSubject</name>
+		<sql>SELECT * FROM study_event WHERE study_event_definition_id=? AND subject_id=?</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO STUDY_EVENT 
+		   (STUDY_EVENT_DEFINITION_ID,SUBJECT_ID,LOCATION,SAMPLE_ORDINAL,
+            DATE_START,DATE_END,OWNER_ID,STATUS_ID,DATE_CREATED) 
+            VALUES (?,?,?,?,?,?,?,?,SYSDATE)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE study_event SET STUDY_EVENT_DEFINITION_ID=?,SUBJECT_ID=?,LOCATION=?,
+		  SAMPLE_ORDINAL=?, DATE_START=?,DATE_END=?,STATUS_ID=?,DATE_UPDATED=?,
+          UPDATE_ID=? WHERE STUDY_EVENT_ID=?
+	    </sql>
+	</query>
+	<query>
+		<name>getCurrentPrimaryKey</name>
+		<sql>SELECT s_study_event.currval AS key</sql>
+	</query>
+		<query>
+		<name>findAllByStudyAndStudySubjectId</name>
+		<sql>
+			SELECT E.*
+			FROM study_subject S, study_event E
+			WHERE
+				S.subject_id = E.subject_id
+				AND S.study_id = ?
+				AND S.study_subject_id=?
+		</sql>
+	</query>
+	<query>
+		<name>findAllByStudyAndEventDefinitionId</name>
+		<sql>
+			SELECT E.*
+			FROM study_event_definition S, study_event E
+			WHERE
+				S.study_event_definition_id = E.study_event_definition_id
+				AND S.study_id = ?
+				AND S.study_event_definition_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findByPKAndStudy</name>
+		<sql>
+			SELECT E.*
+			FROM study_event_definition S, study_event E
+			WHERE
+				S.study_event_definition_id = E.study_event_definition_id
+				AND E.study_event_id=?
+				AND S.study_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>getDefinitionIdFromStudyEventId</name>
+		<sql>SELECT study_event_definition_id FROM study_event WHERE study_event_id = ?</sql>
+	</query>
+</queries>

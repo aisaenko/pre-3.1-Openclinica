@@ -1,0 +1,114 @@
+--------------
+CRF
+--------------
+Enter the name of the CRF
+Enter the name of your case report form (CRF) here. It must be between 1 and 255 characters long. This is a required field.
+
+Enter CRF Version
+Enter the name of this version of the case report form (CRF) here. It must be between 1 and 255 characters long. This is a required field.
+
+Enter CRF Version Description
+Enter a description of this version of the case report form (CRF) here. It must be between 1 and 3999 characters long.
+
+Enter CRF Version Revision Notes
+Enter revision notes for this version of the case report form (CRF) here. The revision notes must be between 1 and 255 characters long and are required.
+
+--------------
+Sections
+--------------
+
+Enter CRF Section Label
+Enter a label for each section of the CRF. It must be between 1 and 255 characters long, and may not use spaces. Each section must have a valid section_label, and the CRF must have at least one section. Each item in the CRF must be assigned to a section.
+
+Enter CRF Section Title
+Enter a name for each section of your case report form (CRF) here. It must be between 1 and 2000 characters long. This is a required field.
+
+Enter Section subtitle
+Enter a subtitle and/or header text that should be shown at the top of the section. It must be between 1 and 2000 characters long. This field is optional.
+
+Enter Section Instructions
+In addition to a subtitle for the section, you may add instructions to show at the top of the section. The instructions must be between 1 and 2000 characters long. This field is optional.
+
+Enter Page Number
+Enter the page number on which the section begins. If you are using paper source documents and have a multi-page CRF, you may put in the printed page number. May be letters or numbers, 1 to 5 characters long. This field is optional.
+
+Enter Parent Section_label
+You may create sub-sections in OpenClinica CRFs by naming a parent section. To do so, enter the   section_label of the parent section that this section is a part of. The value must be a valid section_label from this document. This field is optional.
+
+--------------
+Items
+--------------
+
+Enter Item Name
+Enter the Item Name. This is the unique label or variable name for this data element and should be letters and numbers and no spaces. It should be 1 to 255 characters long. This field is required and must be unique within the spreadsheet.
+
+Enter Description Label
+Enter a description or definition for this item. The description should give an explanation of the data element and the value(s) it captures. It is not shown on the CRF but is in the data dictionary. It should be 1 to 4000 characters long. It is required.
+
+Enter Left Item Text
+Enter the text that should appear to the left of the input on the CRF data entry form. This may be similar to the Description_Label, but phrased in the context of asking a question on the form. It should be 1 to 2000 characters long. It is not required.
+
+Enter Units
+Enter the units that the value of this data element should be captured in. The units will appear to the right of the input field on the data entry form. It should be 1 to 64 characters long. It is not required.
+
+Enter Right Item Text
+Enter the text that should appear to the right of the input (after units) on the CRF data entry form. It may include supplementary information or example values to guide the user. It should be 1 to 2000 characters long. It is not required.
+
+Enter Section_Label
+You must assign each item in a CRF to a section. To do so, enter the section_label of the section to which this item belongs. The value must be a valid section_label from this document. This field is required unless a parent_item is specified. The SECTION_LABEL corresponding to the section within which the question is located. (if different from parent question)
+
+Enter Header
+Enter header, introductory, or instructive text that should be shown on top of the question. It must be between 1 and 2000 characters long. This field is optional.
+
+Enter Subheader
+Enter sub-header, introductory, or instructive text that should be shown on top of the question but under the question header text. It must be between 1 and 240 characters long. This field is optional.
+
+Enter Parent Item
+You may create groups of questions in OpenClinica CRFs by naming a parent item. To do so, enter the item_name of the parent question. The value must be a valid item from this document with the same section_label. This field is optional.
+
+Enter Column Number
+You may allow adjacent items or items with the same parent to be aligned together. To do so enter a column number for the item. For example, consecutive items with column numbers 1 & 2 will appear on the same row. This field is optional.
+
+Enter Page Number
+Enter the page number of the item. If you use paper source documents and have a multi-page CRF, you may put in the printed page number. OpenClinica will create anchor links in the CRF. May be letters or numbers, 1 to 5 characters long, and is optional.
+
+Enter Question Number
+Enter the question number. It will appear to the left of the left_item_text on the CRF data entry form. It may be 1 to 20 characters long, any characters. It is optional.
+
+Enter Response Type
+Provide the input type of the form field for this item. You must enter a valid HTML form input input type from the following list:
+text
+textarea
+single-select
+radio
+multi-select
+checkbox
+
+Enter Response Label
+Create a custom label associated with a response set. This label must be defined once and may be reused by other items with the same responses (eg Yes, No). Must be alphanumeric, 1 to 80 characters long, and is required for each unique response set.
+
+Enter Response Options Text
+Enter a list of the text values of the responses for this response set as a comma-delimited string. Must be 1 to 4000 characters long. It is required for each unique response label but not for previously used response labels.
+
+Enter Response Values
+Enter a comma-delimited list of the encoded values that are answers to this question, in the same order as their corresponding text values in RESPONSE_OPTIONS_TEXT. Must be 1 to 4000 characters long. Only required for each unique response label.
+
+Enter Data Type
+Enter the data type of this item. You must enter a valid data type from the following list:
+ST (Character String)
+INT (Integer)
+REAL (Real Number)
+DATE (Date MM/DD/YYYY)
+
+Enter Validation expression
+Enter a validation expression to run an edit check on this item at the point of entry. Should be of the format "expressionType: expression". Must be between 1 and 1000 characters, optional. For more on supported expressions, see Instructions worksheet.
+
+Enter Validation Error Message
+If you entered a Validation Function, enter the error message that should appear if an entered value does not satisfy the validation criteria. Must be between 1 and 255 characters, required if a Validation Function exists for the item
+
+Define PHI Status
+Enter 1 if this field contains PHI (Protected Health Information), 0 or blank otherwise.
+
+Define Required Status
+Enter 1 if this field is required (eg a value must be entered for user to complete the CRF), 0 or blank otherwise.
+

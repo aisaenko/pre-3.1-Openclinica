@@ -1,0 +1,763 @@
+<html>
+
+<head>
+
+<title>OpenClinica Help</title>
+
+<link rel="stylesheet" href="../includes/styles.css" type="text/css">
+
+<script language="JavaScript" 
+src="../includes/global_functions_javascript.js"></script>
+
+<style type="text/css">
+
+.popup_BG { background-image: url(../images/main_BG.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	background-color: #FFFFFF;
+	}
+
+.helpnav { background-image: url(../images/dots.gif);
+	background-repeat: repeat-y;
+	background-position: right;
+	padding-right: 18px;
+	}
+
+.helptext { padding-left: 18px;
+	}
+
+.term { font-weight: bold;
+	color: #789EC5;
+	}
+
+</style>
+
+</head>
+
+<body class="popup_BG" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+   <tr>
+	<td valign="top">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	   <tr>
+		<td background="../images/popup_BG.gif"><img 
+src="../images/popup_OC.gif"></td>
+		<td background="../images/popup_BG.gif" align="right"><img 
+src="../images/popup_Help.gif"></td>
+	   </tr>
+	   <tr>
+		<td colspan="2" style="padding-top: 18px; padding-left: 45px; padding-right: 45px; padding-bottom: 30px;">
+
+<!-- Main Content Area -->
+
+		<table border="0" cellpadding="0" cellspacing="0">
+		   <tr>
+			<td class="Helpnav" valign="top" nowrap>
+
+	<!-- Help topics nav -->
+	
+	
+	<div class="bullets">
+	<a href="index.html">Table of Contents</a>
+	<br>
+	<blockquote>
+	<a href="1_0_myOpenClinica_Help.html">1. My OpenClinica</a><br>
+	<a href="2_0_submitData_Help.html">2. Submit Data</a><br>
+	<a href="3_0_extractData_Help.html">3. Extract Data</a><br>
+	<a href="4_0_manageStudy_Help.html">4. Manage Study</a><br>
+	<a href="5_0_administerSystem_Help.html">5. Administer System</a><br>
+	</blockquote>
+	 </div>
+
+	<div class="bullets">
+	<a href="glossary.html">Glossary</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="iconkey.html">Icon Key</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="http://www.openclinica.org/page.php?pid=107">OpenClinica Email Forums</a>
+	</div><br>
+	
+	<div class="bullets">
+	<a href="http://www.openclinica.org/section.php?sid=4">OpenClinica Enterprise</a>
+	</div><br>
+
+	<!-- end Help topics nav -->
+
+			<br></td>
+			<td class="helptext" valign="top">
+
+	<!-- Section Help Text -->
+
+	<h1>3.6 SPSS Syntax File Specifications</h1>
+
+	<p><br>
+<b>Created and tested using SPSS 13.0 for Windows</b><br>
+<br>
+SPSS Data Definitions cover 10 main attributes for any variable:
+Name, Type, Width, Decimals, Label, Values, Missing, Columns,
+Align, and Measure.<br>
+<br>
+SPSS is able to read most any ASCII file and deduce parameters
+for some of these variable attributes. However, any other
+attributes must be typed in by hand, which is tedious for large
+datasets.<br>
+<br>
+OpenClinica instead can generate an SPSS Syntax file (*.sps)
+that, in association with the data file, will automatically load
+in the data with the proper variable definitions/attributes.
+OpenClinica currently supports automated definition of Name,
+Type, Width, Decimals, Label, Values, Missing, Columns, Align, and Measure<br>
+<br>
+This document describes the structure and syntax of the .sps
+file.<br>
+<br>
+Conceptual Mapping<br>
+<br>
+The conceptual mapping of OpenClinica data element metadata to
+SPSS Data Definitions is as follows:<br>
+</p>
+
+<p>&nbsp;</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="295"><b>SPSS Data Definition
+        Metadata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="295"><b>OpenClinica CRF Metadata</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Name</td>
+        <td valign="top" width="295">ITEM_NAME</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Type</td>
+        <td valign="top" width="295">Mapped to DATA_TYPES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Width</td>
+        <td valign="top" width="295">Calculated from widest value
+        in field</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Decimals</td>
+        <td valign="top" width="295">If DATA_TYPES = Real, then
+        calculated from most precise value in field. Else 0.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Label</td>
+        <td valign="top" width="295">DESCRIPTION_LABEL</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Values</td>
+        <td valign="top" width="295">Generated from
+        RESPONSE_OPTIONS_TEXT and RESPONSE_OPTIONS_VALUES</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Missing</td>
+        <td valign="top" width="295">N/A</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295" >Columns</td>
+        <td valign="top" width="295">N/A</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Align</td>
+        <td valign="top" width="295">N/A</td>
+    </tr>
+    <tr>
+        <td valign="top" width="295">Measure</td>
+        <td valign="top" width="295">N/A</td>
+    </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p><strong>Mapping between SPSS &#145;Type&#146; and OpenClinica
+DATA_TYPES</strong>&nbsp;</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="161"><b>SPSS
+        Types</b></td>
+        <td valign="top" width="135"><b>SPSS
+        Syntax for Type Format</b></td>
+        <td valign="top" width="158"><b>CRF DATA_TYPE</b></p>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Numeric</td>
+        <td valign="top" width="135">F</td>
+        <td valign="top" width="158">BL
+        (Boolean), BN (BooleanNotNull), INT, Real, SET (if
+        RESPONSE_OPTIONS_VALUES all numeric)</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Comma</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Dot</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Scientific
+        Notation</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Date</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">DATE</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Dollar</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">Custom
+        Currency</td>
+        <td valign="top" width="135">&nbsp;</td>
+        <td valign="top" width="158">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="161">String</td>
+        <td valign="top" width="135">A</td>
+        <td valign="top" width="158">ED
+        (URL), ST (string), SET (if RESPONSE_OPTIONS_VALUES not
+        all numeric)</td>
+    </tr>
+</table>
+
+<p>&nbsp;&nbsp;</p>
+
+<p><strong>Mapping between SPSS &#145;Values&#146; and
+OpenClinica RESPONSE_OPTIONS&nbsp;</strong></p>
+
+<p>The VALUE LABELS in the SPSS Syntax file
+maps OpenClinica RESPONSE_OPTIONS to discrete value sets in SPSS.
+Only variables that have a valid RESPONSE_LABEL should show up
+under the VALUE LABELS section.&nbsp;</p>
+
+<p>Syntax </p>
+
+<p>---------------------------</p>
+
+<p>VALUE LABELS</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+VARNAME1</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_OPTIONS_VALUE[0] &quot;RESPONSE_OPTIONS_TEXT[0]&quot;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_VALUES[1] &quot;RESPONSE_OPTIONS_TEXT[1]&quot;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_VALUES[2] &quot;RESPONSE_OPTIONS_TEXT[2]&quot; /</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+VARNAME2</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_OPTIONS_VALUE[0] &#147;RESPONSE_OPTIONS_TEXT[0]&#147;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_VALUES[1] &#147;RESPONSE_OPTIONS_TEXT[1]&#147;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+RESPONSE_VALUES[2] &#147;RESPONSE_OPTIONS_TEXT[2]&#147; /</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.</p>
+
+<p>---------------------------</p>
+
+<p><strong>Values for built-in system fields&nbsp;</strong></p>
+
+<p>Subject Attributes</p>
+
+<ul type="disc" style="margin-top:0in">
+    <li class="MsoNormal"
+    style="mso-list:l0 level1 lfo2;tab-stops:list .5in">Date of
+        Birth</li>
+</ul>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="127"><b>Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="72"><b>Value</b></td>
+        <td valign="top" width="72"><b>Encoding</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Name</td>
+        <td valign="top" width="72">DOB</td>
+        <td valign="top" width="72">DOB</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Type</td>
+        <td valign="top" width="72">Date</td>
+        <td valign="top" width="72">????</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Width</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Decimals</td>
+        <td valign="top" width="72">0</td>
+        <td valign="top" width="72">0</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Label</td>
+        <td valign="top" width="72">Date
+        of Birth</td>
+        <td valign="top" width="72">Date
+        of Birth</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Values</td>
+        <td valign="top" width="72">None</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Missing</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Columns</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Align</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Measure</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+</table>
+
+<ul type="disc" style="margin-top:0in">
+    <li>Sex</li>
+</ul>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="127"><b>Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="72"><b>Value</b></td>
+        <td valign="top" width="113"><b>Encoding</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Name</td>
+        <td valign="top" width="72">Sex</td>
+        <td valign="top" width="113">Sex</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Type</td>
+        <td valign="top" width="72">String</td>
+        <td valign="top" width="113">A</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Width</td>
+        <td valign="top" width="72">1</td>
+        <td valign="top" width="113">1</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Decimals</td>
+        <td valign="top" width="72">0</td>
+        <td valign="top" width="113">0</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Label</td>
+        <td valign="top" width="72">Sex</td>
+        <td valign="top" width="113">Sex</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Values</td>
+        <td valign="top" width="72">M,
+        F</td>
+        <td valign="top" width="113">Sex<p
+        class="MsoNormal">M &#147;Male&#148;</p>
+        <p>F &#147;Female&#148; /</p>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Missing</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Columns</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Align</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Measure</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+</table>
+
+<p>&nbsp;</p>
+
+<p>Event Attributes</p>
+
+<ul type="disc" style="margin-top:0in">
+    <li>Event
+        Location</li>
+</ul>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="127"><b>Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="72"><b>Value</b></td>
+        <td valign="top" width="113"><b>Encoding</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Name</td>
+        <td valign="top" width="72">LOCATION_[
+        EVENT
+        HANDLE]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </td>
+        <td valign="top" width="113">LOCATION_[
+        EVENT HANDLE]</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Type</td>
+        <td valign="top" width="72">String</td>
+        <td valign="top" width="113">A</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Width</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Decimals</td>
+        <td valign="top" width="72">0</td>
+        <td valign="top" width="113">0</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Label</td>
+        <td valign="top" width="72">Location
+        for for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+        <td valign="top" width="113">Location
+        for for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Values</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Missing</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Columns</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Align</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Measure</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="113">&nbsp;</td>
+    </tr>
+</table>
+
+<ul>
+    <li>Start
+        Date</li>
+</ul>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="127"><b>Field</b></td>
+        <td valign="top" width="72"><b>Value</b></td>
+        <td valign="top" width="72"><b>Encoding</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Name</td>
+        <td valign="top" width="72">STARTDATE_[
+        EVENT HANDLE] </td>
+        <td valign="top" width="72">STARTDATE_[
+        EVENT HANDLE]</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Type</td>
+        <td valign="top" width="72">Date</td>
+        <td valign="top" width="72">????</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Width</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Decimals</td>
+        <td valign="top" width="72">0</td>
+        <td valign="top" width="72">0</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Label</td>
+        <td valign="top" width="72">Start
+        Date for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+        <td valign="top" width="72">Start
+        Date for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Values</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Missing</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Columns</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Align</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Measure</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+</table>
+
+<ul>
+    <li>End Date</li>
+</ul>
+
+<table border="1" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="top" width="127"><b>Field&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </b></td>
+        <td valign="top" width="72"><b>Value</b></td>
+        <td valign="top" width="72"><b>Encoding</b></td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Name</td>
+        <td valign="top" width="72">EndDate_[
+        EVENT HANDLE]</td>
+        <td valign="top" width="72">EndDate_[
+        EVENT HANDLE]</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Type</td>
+        <td valign="top" width="72">Date</td>
+        <td valign="top" width="72">????</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Width</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Decimals</td>
+        <td valign="top" width="72">0</td>
+        <td valign="top" width="72">0</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Label</td>
+        <td valign="top" width="72">End
+        Date for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+        <td valign="top" width="72">End
+        Date for Event &#145;[EVENT NAME]&#146; (EVENT HANDLE)</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Values</td>
+        <td valign="top" width="72">None</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Missing</td>
+        <td valign="top" width="72"">None</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Columns</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Align</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top" width="127">Measure</td>
+        <td valign="top" width="72">&nbsp;</td>
+        <td valign="top" width="72">&nbsp;</td>
+    </tr>
+</table>
+
+<p><strong>Variable Naming</strong><br>
+The following rules apply to variable names: <br>
+<br>
+The name must begin with a letter. The remaining characters can
+be any letter, any digit, a period, or the symbols @, #, _, or $.
+<br>
+Variable names cannot end with a period. <br>
+Variable names that end with an underscore should be avoided (to
+avoid conflict with variables automatically created by some
+procedures). <br>
+The length of the name cannot exceed 64 bytes. Sixty-four bytes
+typically means 64 characters in single-byte languages (for
+example, English, French, German, Spanish, Italian, Hebrew,
+Russian, Greek, Arabic, Thai) and 32 characters in double-byte
+languages (for example, Japanese, Chinese, Korean). <br>
+Blanks and special characters (for example, !, ?, ', and *)
+cannot be used. <br>
+Each variable name must be unique; duplication is not allowed. <br>
+Reserved keywords cannot be used as variable names. Reserved
+keywords are: ALL, AND, BY, EQ, GE, GT, LE, LT, NE, NOT, OR, TO,
+WITH. <br>
+Variable names can be defined with any mixture of upper- and
+lowercase characters, and case is preserved for display purposes.
+<br>
+When long variable names need to wrap onto multiple lines in
+output, SPSS attempts to break the lines at underscores, periods,
+and at changes from lower case to upper case<br>
+<br>
+
+<br>Rules for automatically converting an invalid SPSS variable name to valid SPSS variable name:<br>
+ 	<br> - Replace any invalid character with the symbol #
+ 	<br> - If the first character is not a letter, letter V will be used as first letter
+ 	<br> - If the last character is a period or underscore, it will replaced by #
+ 	<br> - If a name is longer than 64 characters, it will be truncated to 64 characters.
+    <br> - If it results in non-unique name in a data file, sequential numbers are 
+ 		 used to replace its letters at the end. By default, the size of 
+ 		 sequential numbers is 3.
+    <br> - If a reserved keyword has been used as a variable name, squential numbers are apended to its end.
+<br>
+
+
+<p><strong>Syntax<br>
+</strong>The syntax file uses the GET DATA command. The formal
+syntax (as taken from SPSS help documentation) is as follows:<br>
+<br>
+------------------------------------------<br>
+GET DATA Command Syntax<br>
+GET DATA<br>
+/TYPE = {ODBC}<br>
+{XLS }<br>
+{TXT }<br>
+/FILE = 'filename'<br>
+Subcommands for TYPE = ODBC<br>
+/CONNECT='connection string'<br>
+/UNENCRYPTED<br>
+/SQL 'any select statement'<br>
+['select statement continued']<br>
+/ASSUMEDSTRWIDTH={255**}<br>
+{n }<br>
+Subcommands for TYPE = XLS<br>
+[/SHEET = {INDEX**} {sheet number}]<br>
+{NAME } {'sheet name'}<br>
+[/CELLRANGE = {RANGE } {'start point:end point'}]<br>
+{FULL**}<br>
+[/READNAMES = {on** }]<br>
+{off }<br>
+Subcommands for TYPE = TXT<br>
+[/ARRANGEMENT = {FIXED }]<br>
+{DELIMITED**}<br>
+[/FIRSTCASE = {n}]<br>
+[/DELCASE = {LINE** }]1<br>
+{VARIABLES n} <br>
+[/FIXCASE = n]2<br>
+[/IMPORTCASE = {ALL** }]<br>
+{FIRST n }<br>
+{PERCENT n}<br>
+[/DELIMITERS = {'delimiters'}]<br>
+[/QUALIFIER = 'qualifier']<br>
+<br>
+VARIABLES subcommand for ARRANGEMENT = DELIMITED<br>
+/VARIABLES = varname format varname format... <br>
+VARIABLES subcommand for ARRANGEMENT = FIXED<br>
+/VARIABLES [/rec#] varname startcol-endcol format<br>
+[/rec#] varname startcol-endcol format... <br>
+<br>
+<b>Note:</b> For text data files, the first column is column 0, not
+column 1. This is different from DATA LIST, where the first
+column is column 1. <br>
+------------------------------------------<br>
+<br>
+VARIABLE LABELS<br>
+V1 &quot;Subject Unique ID&quot;<br>
+<br>
+<br>
+VALUE LABELS<br>
+V11_U24_A1<br>
+2 &quot;ab&quot;<br>
+128 &quot;gh&quot;<br>
+254 &quot;xt&quot;<br>
+380 &quot;ff&quot; /<br>
+<br>
+</p>
+
+<p><strong>References</strong></p>
+
+<p>[1] <a
+href="http://www.icpsr.umich.edu/NACJD/HELP/faq-nacjd.html">http://www.icpsr.umich.edu/NACJD/HELP/faq-nacjd.html</a></p>
+
+<p>[2] <a
+href="http://www.hmdc.harvard.edu/pub_files/SPSS_Syntax.pdf">http://www.hmdc.harvard.edu/pub_files/SPSS_Syntax.pdf</a></p>
+	
+	<!-- End Help Text -->
+	<p>&nbsp;</p>
+			</td>
+		   </tr>
+		</table>
+		</td>
+	   </tr>
+	</table>
+	</td>
+   </tr>
+   <tr>
+	<td valign="bottom" align="right" style="padding-right: 18px; padding-bottom: 8px">
+
+	<a href="javascript:window.close();">Exit Help</a>
+
+	</td>
+   </tr>
+</table>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+<RuleImport>
+    <RuleAssignment>
+        <Target Context="OC_RULES_V1"></Target>
+        <RuleRef OID="K1">
+            <DiscrepancyNoteAction IfExpressionEvaluates="false">
+                <Message></Message>
+            </DiscrepancyNoteAction>
+        </RuleRef>
+    </RuleAssignment>
+
+    <RuleDef OID="K1" Name="k1">
+        <Description></Description>
+        <Expression Context="OC_RULES_V1"></Expression>
+    </RuleDef>
+</RuleImport>

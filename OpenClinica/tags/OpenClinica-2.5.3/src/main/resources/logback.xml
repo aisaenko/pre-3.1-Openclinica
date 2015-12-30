@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+  <substitutionProperty name="log.dir" value="${catalina.home}/logs/" />
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%date{MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{35}:%L - %msg %n</Pattern>
+    </layout>
+  </appender>
+  <appender name="LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.dir}openclinica.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <FileNamePattern>${log.dir}openclinica%i.log</FileNamePattern>
+      <MinIndex>1</MinIndex>
+      <MaxIndex>3</MaxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>1MB</MaxFileSize>
+    </triggeringPolicy>
+
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%date{MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{35}:%L - %msg %n %ex{full}</Pattern>
+    </layout>
+  </appender>
+  <appender name="EDIT_CHECK_LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.dir}openclinica-editChecks.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <FileNamePattern>${log.dir}openclinica-editChecks%i.log</FileNamePattern>
+      <MinIndex>1</MinIndex>
+      <MaxIndex>3</MaxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>1MB</MaxFileSize>
+    </triggeringPolicy>
+
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%date{MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{35}:%L - %msg %n %ex{full}</Pattern>
+    </layout>
+  </appender>
+
+  <appender name="LOGGED_USER_LOGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>${log.dir}openclinica-users.log</File>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <FileNamePattern>${log.dir}openclinica-users%i.log</FileNamePattern>
+      <MinIndex>1</MinIndex>
+      <MaxIndex>3</MaxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>1MB</MaxFileSize>
+    </triggeringPolicy>
+
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%date - %msg %n %ex{full}</Pattern>
+    </layout>
+  </appender>
+  <logger name="org.akaza.openclinica.logic.rulerunner">
+    <level value="DEBUG" />
+    <appender-ref ref="EDIT_CHECK_LOGFILE"/>
+  </logger>
+  <logger name="org.akaza.openclinica.core.SessionManager">
+    <level value="INFO" />
+    <appender-ref ref="LOGGED_USER_LOGFILE"/>
+  </logger>
+  <logger name="org.akaza.openclinica.control.login.LogoutServlet">
+    <level value="INFO" />
+    <appender-ref ref="LOGGED_USER_LOGFILE"/>
+  </logger>
+  <!-- Change the level to INFO to see all queries whenever database is accessed. All errors should be logged as .WARN or higher -->
+  <logger name="org.akaza.openclinica.dao">
+    <level value="WARN" />
+  </logger>
+  <root>
+    <level value="DEBUG" />
+    <!-- <appender-ref ref="CONSOLE"/> -->
+    <appender-ref ref="LOGFILE"/>
+  </root>
+</configuration>
