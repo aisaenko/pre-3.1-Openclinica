@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+	<changeSet author="sshamim" id="2010-06-30-NA02-1">
+		<comment>event_definition_crf (Section message)</comment>
+		<addColumn tableName="event_definition_crf">
+			<column name="crf_section_message" type="VARCHAR(1000)"/>
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>

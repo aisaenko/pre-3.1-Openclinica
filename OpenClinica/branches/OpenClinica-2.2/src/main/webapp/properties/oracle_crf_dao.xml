@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM CRF WHERE 
+		CRF_ID = ?</sql>
+	</query>
+	<query>
+		<name>findByName</name>
+		<sql>SELECT * FROM CRF WHERE 
+		name = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM CRF</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>INSERT INTO CRF (STATUS_ID,NAME,
+		DESCRIPTION, OWNER_ID,
+		DATE_CREATED) 
+		VALUES (?,?,?,?,SYSDATE)</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>UPDATE CRF SET STATUS_ID=?,NAME=?,
+		DESCRIPTION=?,DATE_UPDATED=SYSDATE,UPDATE_ID=? WHERE 
+		CRF_ID=?</sql>
+	</query>
+	<query>
+	 <name>findVersionNamesForCRF</name>
+	 <sql>select name, description 
+    	  from crf_version 
+    	where crf_id=?
+     </sql>
+	</query>
+	<query>
+	 <name>findItemNames</name>
+	 <sql>SELECT name FROM item</sql>
+	</query>
+	<query>
+	 <name>findDefaultVersion</name>
+	 <sql>
+	    select default_version_id 
+	    from event_definition_crf where crf_id =?
+	 </sql>
+	</query>
+	<query>
+	 <name>updateDefaultVersion</name>
+	 <sql>
+	     update event_definition_crf set default_version_id = 
+	     (select crf_version_id from crf_version where crf_id = ?) 
+	     where crf_id = ?
+	 </sql>
+	</query>
+	<query>
+		<name>findByVersionId</name>
+		<sql>
+			SELECT DISTINCT c.*
+			FROM crf c, crf_version v
+			WHERE c.crf_id=v.crf_id AND v.crf_version_id=?
+		</sql>
+	</query>
+</queries>

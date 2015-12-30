@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>SELECT * FROM SUBJECT_GROUP_MAP WHERE 
+		SUBJECT_GROUP_MAP_ID = ?</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM SUBJECT_GROUP_MAP</sql>
+	</query>
+	<query>
+		<name>create</name>
+		<sql>
+		   INSERT INTO SUBJECT_GROUP_MAP 
+		   (STUDY_GROUP_ID,STUDY_SUBJECT_ID,GROUP_ROLE_ID,STATUS_ID,
+		   OWNER_ID,DATE_CREATED) 
+		   VALUES (?,?,?,?,?,SYSDATE)
+		</sql>
+	</query>
+	<query>
+		<name>update</name>
+		<sql>
+		  UPDATE SUBJECT_GROUP_MAP SET STUDY_GROUP_ID=?,STUDY_SUBJECT_ID=?,GROUP_ROLE_ID=?,
+		  STATUS_ID=?,DATE_UPDATED=?, UPDATE_ID=? WHERE SUBJECT_GROUP_MAP_ID=?
+	    </sql>
+	</query>
+</queries>

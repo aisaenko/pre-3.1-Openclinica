@@ -1,0 +1,160 @@
+<html>
+
+<head>
+
+<title>OpenClinica Help</title>
+
+<META HTTP-EQUIV=Refresh CONTENT="1; URL=http://www.openclinica.org/OpenClinica/2.5/doc/2_5_discrepancyNotes_Help.html">
+<link rel="stylesheet" href="../includes/styles.css" type="text/css">
+
+<script language="JavaScript" 
+src="../includes/global_functions_javascript.js"></script>
+
+<style type="text/css">
+
+.popup_BG { background-image: url(../images/main_BG.gif);
+	background-repeat: repeat-x;
+	background-position: top;
+	background-color: #FFFFFF;
+	}
+
+.helpnav { background-image: url(../images/dots.gif);
+	background-repeat: repeat-y;
+	background-position: right;
+	padding-right: 18px;
+	}
+
+.helptext { padding-left: 18px;
+	}
+
+.term { font-weight: bold;
+	color: #789EC5;
+	}
+
+</style>
+
+</head>
+
+<body class="popup_BG" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+   <tr>
+	<td valign="top">
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	   <tr>
+		<td background="../images/popup_BG.gif"><img 
+src="../images/popup_OC.gif"></td>
+		<td background="../images/popup_BG.gif" align="right"><img 
+src="../images/popup_Help.gif"></td>
+	   </tr>
+	   <tr>
+		<td colspan="2" style="padding-top: 18px; padding-left: 45px; padding-right: 45px; padding-bottom: 30px;">
+
+<!-- Main Content Area -->
+
+		<table border="0" cellpadding="0" cellspacing="0">
+		   <tr>
+			<td class="Helpnav" valign="top" nowrap>
+
+	<!-- Help topics nav -->
+	
+	
+	<div class="bullets">
+	<a href="index.html">Table of Contents</a>
+	<br>
+	<blockquote>
+	<a href="1_0_myOpenClinica_Help.html">1. My OpenClinica</a><br>
+	<a href="2_0_submitData_Help.html">2. Submit Data</a><br>
+	<a href="3_0_extractData_Help.html">3. Extract Data</a><br>
+	<a href="4_0_manageStudy_Help.html">4. Manage Study</a><br>
+	<a href="5_0_administerSystem_Help.html">5. Business Admin</a><br>
+	</blockquote>
+	 </div>
+
+	<div class="bullets">
+	<a href="glossary.html">Glossary</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="iconkey.html">Icon Key</a>
+	</div><br>
+
+	<div class="bullets">
+	<a href="http://www.openclinica.org/page.php?pid=107" target="_blank">OpenClinica Email Forums</a>
+	</div><br>
+	
+	<div class="bullets">
+	<a href="http://www.openclinica.org/section.php?sid=4"target="_blank">OpenClinica Enterprise</a>
+	</div><br>
+
+	<!-- end Help topics nav -->
+
+			<br></td>
+			<td class="helptext" valign="top">
+
+	<!-- Section Help Text -->
+
+	<h1>2.5 Discrepancy Notes Help</h1>
+
+	<p>
+	<a href="#about"><i>About Discrepancy Notes</i></a><br>
+	<a href="#dm"><i>Discrepancy Manager</i></a><br>
+	<a href="#createdn"><i>Creating Discrepancy Notes</i></a><br>
+	<a href="#viewdn"><i>Viewing Discrepancy Notes</i></a><br>
+	<a href="#resolvedn"><i>Resolving Discrepancy Notes</i></a><br>
+	
+	<p><a name="about"></a><i>About Discrepancy Notes</i> - OpenClinica provides discrepancy management capabilities to verifying the accuracy and completeness of data in a clinical trial, to address incomplete or inaccurate data, provide tracking and auditing on changes to the data, and track accuracy and completeness for studies, sites, users, and CRFs. Discrepancy Management may be turned on or off for each study as part of the study configuration.
+	<p>A discrepancy note is always associated with a particular subject-specific data element (or item). This may be an element that is entered when adding the subject record, such as date of birth, or elements created when recording a patient encounter, such as the date of a study event or an item in a CRF.
+	<p>Discrepancy Notes can be 'threaded' with a parent and child notes linked to the parent - this allows recording of annotations and review actions on a single note over time, ending with creation of a 'Closed/Resolved' note. Nested (multi-level) threading is not currently supported. Multiple discrepancy note threads may exist for a single data element.
+	
+	<p><a href="#top">Back to Top</a>
+	<p><a name="dm"></a><i>Notes & Discrepancy Manager</i> - The Discrepancy Manager allows a Study Manager to view and resolve discrepancy notes that are generated during the course of data capture and verification.  The screen will list all discrepancy notes for a given Study, and can take you to a more detailed view for each not or through a workflow to resolve open notes. Where relevant, entity names will link to data dictionary popups to provide more information on which data element the note refers to.
+	<p>"Find" will search the following fields Subject, Description, Type, Res. Status, Entity Name, Entity Type, Entity Value, CRF Name, and Event Name.
+	
+	<p>Note: You may click the printer icon at the top of page to open a printable report of all discrepancy notes. This report will show all discrepancy nots (will not be paginated) and will be formatted for printing.
+
+	<p><a href="#top">Back to Top</a>
+  	<p><a name="createdn"></a><i>Creating Discrepancy Notes</i> - Discrepancy Notes are created by clicking on a flag icon next to the corresponding data element in a form such as an 'Enroll Subject' form or a CRF. Anywhere you see this flag, you may add a discrepancy note to that item. If a discrepancy note already exists, you may view the existing note(s) or add an additional one. <b>Javascript must be enabled and popup blockers should be disabled for discrepancy notes to work correctly.</b> Clicking the flag icon will call a popup window in which you can enter information about the discrepancy or ambiguity related to the particular item. For notes created during CRF data entry, for failed validation checks, the system will automatically include the validation error message in the Discrepancy Note.
+	<p>Discrepancy types include: Failed Validation Check, Annotation, Query and Reason for Change. 
+	NOTE: when adding a new discrepancy note to a form, be sure to submit the form before doing anything else, otherwise, your discrepancy note may not be saved to the database.
+	
+	<p><a href="#top">Back to Top</a>
+  	<p><a name="viewdn"></a><i>Viewing Discrepancy Notes</i> - You may view existing discrepancy notes by clicking on any red flag in a form or by clicking the 'View' icon in the Discrepancy Manager. Each record in the discrepancy manageer will have a "View" icon, which will open a View Discrepancy Note popup for the note. 
+	
+	<p>The 'View Discrepancy Note' popup will show full information on all the parent and child notes in that thread.
+	
+	It includes (group as shown below):
+	<p>The Note Description (title), Resolution Status, Most Recent Updated Date, Last Updated By, Created By, # of Notes
+  	<p>Entity Type, Subject, Event, Event date, CRF Name, Entity Name (if Entity Name is a CRF item it should link to metadata dictionary item)
+  	<p>If a Parent Note exists: Description, Date Created, Created By, Type, Detailed Note
+    <p>For each Child Note: Description, Date Created, Created By, Type, Detailed Note
+	
+	<p><a href="#top">Back to Top</a>
+	<p><a name="resolvedn"></a><i>Udating and Resolving Discrepancy Notes</i> - Resolving a Discrepancy Note merely means adding a child note with a Resolution Status of 'Closed/Resolved'. You may do this by clicking on the 'Resolve Note' icon in the Discrepancy Manager, or manually set the Res. Status to 'Closed/Resolved' for any note when adding it in the popup interface. 
+	<p>Resolution Stautuses include: New, Updated, Resolution Proposed, Closed and Not Applicable
+	<p>Once a note has been closed, you may not add additional child notes to that parent note. However, you may create a new parent Discrepancy Note for the same item, allowing you to re-open an old issue as necessary or open a new, unrelated issue on the same data element.
+	<p><a href="#top">Back to Top</a>
+
+	<!-- End Help Text -->
+	</p>
+	<p><br>
+	    </p></td>
+		   </tr>
+		</table>
+		</td>
+	   </tr>
+	</table>
+	</td>
+   </tr>
+   <tr>
+	<td valign="bottom" align="right" style="padding-right: 18px; padding-bottom: 8px">
+
+	<a href="javascript:window.close();">Exit Help</a>
+
+	</td>
+   </tr>
+</table>
+
+</body>
+
+</html>

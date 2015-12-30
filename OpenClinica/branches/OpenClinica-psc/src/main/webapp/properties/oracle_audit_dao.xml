@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<queries>
+	<query>
+		<name>findByPK</name>
+		<sql>
+		 SELECT * FROM audit_log_event WHERE audit_id = ?
+		</sql>
+	</query>
+	<query>
+		<name>findAll</name>
+		<sql>SELECT * FROM audit_log_event</sql>
+	</query>
+	<query>
+		<name>findStudySubjectAuditEvents</name>
+		<sql>
+			SELECT  ale.audit_id, ale.audit_date, ale.audit_table, ale.user_id, ale.entity_id,
+        	ale.entity_name, ale.reason_for_change, ale.audit_log_event_type_id, ale.old_value,
+        	ale.new_value, ale.event_crf_id, ua.user_name, alet.name
+			FROM audit_log_event ale JOIN user_account ua ON ale.user_id=ua.user_id
+     		JOIN audit_log_event_type alet ON ale.audit_log_event_type_id=alet.audit_log_event_type_id
+			WHERE ale.audit_table='study_subject' AND ale.audit_log_event_type_id IN (2,3,4) AND ale.entity_id=?
+		</sql>
+	</query>			  
+	<query>
+		<name>findSubjectAuditEvents</name>
+		<sql>
+			SELECT  ale.audit_id, ale.audit_date, ale.audit_table, ale.user_id, ale.entity_id,
+        	ale.entity_name, ale.reason_for_change, ale.audit_log_event_type_id, ale.old_value,
+        	ale.new_value, ale.event_crf_id, ua.user_name, alet.name
+			FROM audit_log_event ale JOIN user_account ua ON ale.user_id=ua.user_id
+     		JOIN audit_log_event_type alet ON ale.audit_log_event_type_id=alet.audit_log_event_type_id
+			WHERE ale.audit_table='subject' AND ale.audit_log_event_type_id IN (5,6,7) AND ale.entity_id=?
+		</sql>
+	</query>			  
+	<query>
+		<name>findEventCRFAuditEvents</name>
+		<sql>
+			SELECT  ale.audit_id, ale.audit_date, ale.audit_table, ale.user_id, ale.entity_id,
+        	ale.entity_name, ale.reason_for_change, ale.audit_log_event_type_id, ale.old_value,
+        	ale.new_value, ale.event_crf_id, ua.user_name, alet.name
+			FROM audit_log_event ale JOIN user_account ua ON ale.user_id=ua.user_id
+     		JOIN audit_log_event_type alet ON ale.audit_log_event_type_id=alet.audit_log_event_type_id
+			WHERE ale.audit_log_event_type_id IN (1,8,9,10,11,12,13) AND ale.event_crf_id=?
+		</sql>
+	</query>			  
+</queries>

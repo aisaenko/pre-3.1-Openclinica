@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openclinica.org/ws/ccts/subject/v1"
+    xmlns:subjects="http://openclinica.org/ws/ccts/subject/v1" 
+    elementFormDefault="qualified">
+
+
+    <element name="commitRequest">
+        <complexType>
+            <sequence>
+                <element name="gridId" type="subjects:customStringType"/>
+                <element name="subject" type="subjects:SubjectType"/>
+                <element name="study" type="subjects:StudyType"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <element name="commitResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <element name="rollbackRequest">
+        <complexType>
+            <sequence>
+                <element name="gridId" type="subjects:customStringType"/>
+                <element name="subject" type="subjects:SubjectType"/>
+                <element name="study" type="subjects:StudyType"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <element name="rollbackResponse">
+        <complexType>
+            <sequence>
+                <element name="result" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="SubjectType">
+        <sequence>
+            <element name="personId" type="subjects:customStringType"/>
+            <element name="studySubjectId" type="subjects:customStringType"/>
+            <element name="secondaryId" type="subjects:customStringType" minOccurs="0"/>
+            <element name="enrollmentDate" type="date"/>
+            <element name="gender" type="subjects:genderType" />
+            <element name="dateOfBirth" type="date"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="StudyType">
+        <attribute name="uniqueIdentifier" type="subjects:customStringType"/>
+    </complexType>
+    
+    <simpleType name="genderType">
+        <restriction base="string">
+            <enumeration value="m"/>
+            <enumeration value="f"/>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="customStringType">
+        <restriction base="normalizedString">
+            <minLength value="1"/>
+            <whiteSpace value="collapse"/> 
+        </restriction>
+    </simpleType>
+    
+</schema>

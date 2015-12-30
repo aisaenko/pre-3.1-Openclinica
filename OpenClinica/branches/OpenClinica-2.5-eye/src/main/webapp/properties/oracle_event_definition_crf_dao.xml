@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<queries>
+        <query>
+                <name>findByPK</name>
+                <sql>SELECT * FROM EVENT_DEFINITION_CRF WHERE 
+                EVENT_DEFINITION_CRF_ID = ?</sql>
+        </query>
+        <query>
+                <name>findAll</name>
+                <sql>SELECT * FROM EVENT_DEFINITION_CRF</sql>
+        </query>
+        <query>
+                <name>findAllByDefinition</name>
+                <sql>SELECT * FROM EVENT_DEFINITION_CRF Where study_event_definition_id=? order by ordinal asc</sql>
+        </query>
+        <query>
+            <name>findAllByStudy</name>
+            <sql>SELECT edc.* FROM EVENT_DEFINITION_CRF edc, study st
+                 WHERE edc.study_id = st.study_id
+                    AND (st.study_id=? or st.parent_study_id=?)
+                    AND edc.status_id=1
+                    order by edc.study_event_definition_id, edc.ordinal asc
+            </sql>
+        </query>
+
+        <query>
+                <name>findByDefaultVersion</name>
+                <sql>SELECT * FROM EVENT_DEFINITION_CRF Where DEFAULT_VERSION_ID=?</sql>
+        </query>
+        <query>
+                <name>create</name>
+                <sql>
+                   INSERT INTO EVENT_DEFINITION_CRF 
+                   (EVENT_DEFINITION_CRF_ID,STUDY_EVENT_DEFINITION_ID,STUDY_ID,CRF_ID,REQUIRED_CRF,
+           DOUBLE_ENTRY,REQUIRE_ALL_TEXT_FILLED,DECISION_CONDITIONS,
+           NULL_VALUES,DEFAULT_VERSION_ID,STATUS_ID,OWNER_ID, DATE_CREATED, ordinal, ELECTRONIC_SIGNATURE) 
+                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,sysdate,?,?)
+                </sql>
+        </query>
+        <query>
+                <name>update</name>
+                <sql>
+                   UPDATE EVENT_DEFINITION_CRF SET 
+                   STUDY_EVENT_DEFINITION_ID=?,STUDY_ID=?,CRF_ID=?, REQUIRED_CRF=?,
+           DOUBLE_ENTRY=?,REQUIRE_ALL_TEXT_FILLED=?,DECISION_CONDITIONS=?,
+           NULL_VALUES=?,DEFAULT_VERSION_ID=?,STATUS_ID=?,DATE_UPDATED=?,UPDATE_ID=?,
+           ordinal=?,ELECTRONIC_SIGNATURE=? WHERE EVENT_DEFINITION_CRF_ID=?
+            </sql>
+        </query>
+        <query>
+                <name>findAllByEventDefinitionId</name>
+                <sql>SELECT * FROM event_definition_crf 
+         WHERE study_event_definition_id=?
+         order by ordinal asc
+        </sql>
+        </query>
+        <query>
+                <name>findAllActiveByEventDefinitionId</name>
+                <sql>
+          SELECT * FROM event_definition_crf 
+          WHERE study_event_definition_id=? and status_id=1
+          order by ordinal asc
+        </sql>
+        </query>
+        <query>
+                <name>findByStudyEventIdAndCRFVersionId</name>
+                <sql>
+                        SELECT EDC.*
+                        FROM EVENT_DEFINITION_CRF EDC, STUDY_EVENT SE, CRF_VERSION CV
+                        WHERE EDC.study_event_definition_id=SE.study_event_definition_id
+                                AND EDC.crf_id = CV.crf_id
+                                AND SE.study_event_id = ?
+                                AND CV.crf_version_id = ?
+                </sql>
+        </query>
+        <query>
+                <name>isRequiredInDefinition</name>
+                <sql>
+                        select distinct event_definition_crf.required_crf from event_definition_crf, event_crf, crf_version, study_event where 
+                crf_version.crf_version_id = ? and 
+                crf_version.crf_version_id = event_crf.crf_version_id and 
+                crf_version.crf_id = event_definition_crf.crf_id and
+                event_definition_crf.study_event_definition_id = study_event.study_event_definition_id
+                and study_event.study_event_id = ?
+                </sql>
+        </query>
+        <query>
+                <name>findByStudyEventDefinitionIdAndCRFId</name>
+                <sql>
+                        SELECT * FROM EVENT_DEFINITION_CRF
+                        WHERE study_event_definition_id = ? AND crf_id = ?
+                </sql>
+        </query>
+        <query>
+                <name>findByCRFId</name>
+                <sql>
+                        SELECT * FROM EVENT_DEFINITION_CRF
+                        WHERE crf_id = ?
+                </sql>
+        </query>
+        <query>
+                <name>getCurrentPK</name>
+                <sql>
+                        SELECT event_definition_crf_id_seq.currval AS key from dual
+                </sql>
+        </query>
+        <query>
+                <name>getNextPK</name>
+                <sql>
+                        SELECT event_definition_crf_id_seq.nextval AS key from dual
+                </sql>
+        </query>
+        <query>
+            <name>findAllByEventDefinitionIdAndOrdinal</name>
+            <sql>SELECT * FROM event_definition_crf
+             WHERE study_event_definition_id=? AND ordinal=?
+             order by ordinal asc
+            </sql>
+        </query>
+
+
+</queries>
